@@ -15,11 +15,15 @@ class BarChart extends React.Component {
   componentDidMount() {
     const { dataType, values } = this.props.data;
 
-    console.log(dataType, values);
+    //console.log(dataType, values);
+
+    //get the width of the container the graph will be drawn into to prevent fallout
+    var element = d3.select("#container").node();
+    const containerWidth = element.getBoundingClientRect().width;
 
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-      width = 960 - margin.left - margin.right,
+      width = containerWidth - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
     // set the ranges
@@ -44,7 +48,9 @@ class BarChart extends React.Component {
       })
     );
     y.domain([
-      0,
+      d3.min(values, function (n) {
+        return n.value;
+      }),
       d3.max(values, function (n) {
         return n.value;
       }),
@@ -87,11 +93,7 @@ class BarChart extends React.Component {
         justifyItems: "center",
       },
     };
-    return (
-      <div id="container" style={styles.container}>
-        <h1 style={{ textAlign: "center" }}>Title</h1>
-      </div>
-    );
+    return <div id="container" style={styles.container}></div>;
   }
 }
 

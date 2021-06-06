@@ -3,6 +3,7 @@ import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
 
+// TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
   state = {
     //current page
@@ -13,9 +14,13 @@ class Main extends Component {
 
     //can be data or a URL
     InputData:
+      "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
+
+    TestLinks: [
       "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/demo.html",
-    //"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
-    //"Column1,Column2,Column3,Columb4\n1,2,3,9\n4,5,6,8\n7,8,9,8",
+      "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
+      "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
+    ],
 
     HeaderPresent: true,
 
@@ -83,6 +88,7 @@ class Main extends Component {
       colsToView,
       dataToClean,
       visualise,
+      TestLinks,
     } = this.state;
 
     const values = {
@@ -96,6 +102,7 @@ class Main extends Component {
       colsToView,
       dataToClean,
       visualise,
+      TestLinks,
     };
 
     // eslint-disable-next-line default-case

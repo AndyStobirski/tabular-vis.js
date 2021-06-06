@@ -8,6 +8,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+// TODO add auto detection of data types
+// TODO add utilities to clean data such as distinct, remove rows with blank values or rows with bad data
+
 class CleanData extends Component {
   nextStep = (e) => {
     e.preventDefault();

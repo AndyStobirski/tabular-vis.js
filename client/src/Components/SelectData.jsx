@@ -11,6 +11,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import * as d3 from "d3";
 
 // TODO Clean up load HTML tables dialogue
+// TODO Add drag and drop functionality for CSV files
+// TODO Add modal loading screen for URL load
 
 class SelectData extends Component {
   state = {
@@ -20,11 +22,7 @@ class SelectData extends Component {
     TablesReturned: null,
   };
 
-  componentDidMount() {
-    d3.csv("MOCK_DATA.csv", function (data) {
-      console.log(data);
-    });
-  }
+  componentDidMount() {}
 
   nextStep = (e) => {
     //    e.preventDefault();
@@ -91,12 +89,12 @@ class SelectData extends Component {
   };
 
   loadFile = (e) => {
-    console.log("loadFile", e);
+    //console.log("loadFile", e);
 
     // eslint-disable-next-line default-case
     switch (e) {
       case "1": //load HTML
-        console.log("HO");
+        //console.log("HO");
 
         //const {Tabletojson: tabletojson} = require('../dist');
         const fs = require("fs");
@@ -107,7 +105,7 @@ class SelectData extends Component {
           { encoding: "UTF-8" }
         );
 
-        console.log(html);
+        //console.log(html);
 
         //const converted = tabletojson.convert(html);
 
@@ -118,7 +116,7 @@ class SelectData extends Component {
         break;
 
       default:
-        console.log("nothing");
+        //console.log("nothing");
         break;
     }
   };
@@ -144,6 +142,11 @@ class SelectData extends Component {
     }
   };
 
+  predefinedDataSources = (e) => {
+    console.log(this.props.values.TestLinks[e]);
+    this.props.updateStateValue("InputData", this.props.values.TestLinks[e]);
+  };
+
   render() {
     const { values, handleChange } = this.props;
     return (
@@ -155,6 +158,17 @@ class SelectData extends Component {
         </Form>
         <Form onSubmit={this.handleSubmit}>
           <InputGroup className="mb-4">
+            <DropdownButton
+              as={InputGroup.Prepend}
+              variant="outline-secondary"
+              title="Handy Links"
+              id="input-group-dropdown-1"
+              onSelect={this.predefinedDataSources}
+            >
+              {this.props.values.TestLinks.map((item, idx) => {
+                return <Dropdown.Item eventKey={idx}>{item}</Dropdown.Item>;
+              })}
+            </DropdownButton>
             <FormControl
               placeholder="URL to load"
               aria-describedby="basic-addon2"

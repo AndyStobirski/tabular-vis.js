@@ -9,7 +9,16 @@ import Button from "react-bootstrap/Button";
 import VisualiseModal from "./VisualiseModal";
 import ExportModal from "./ExportModal";
 
-// TODO Add options dialogue for export grid data
+// DONE Add context menu support - https://handsontable.com/docs/8.4.0/frameworks-wrapper-for-react-custom-context-menu-example.html
+// DONE Add Selected data support
+// DONE add row dragging
+// DONE add column dragging
+// DONE add column filtering
+// DONE add column ordering
+// DONE Add options dialogue for export grid data
+// TODO Add support for data appropriate filtering of columns
+// TODO Investigate dynamic sizing of grid
+// TODO Customise filter context menu to remove options for inserting / removing columns
 
 class ViewData extends Component {
   constructor(props, context) {
@@ -191,11 +200,11 @@ class ViewData extends Component {
   }
 
   afterFilter = () => {
-    console.log("afterRowMove");
+    //console.log("afterRowMove");
   };
 
   afterFilter = () => {
-    console.log("afterFiler");
+    //console.log("afterFiler");
   };
 
   /**
@@ -249,13 +258,6 @@ class ViewData extends Component {
   //#endregion
 
   render() {
-    // // TODO Add context menu support - https://handsontable.com/docs/8.4.0/frameworks-wrapper-for-react-custom-context-menu-example.html
-    // // TODO Add Selected data support
-    // // TODO add row dragging
-    // // TODO add column dragging
-    // // TODO add column filtering
-    // // TODO add column ordering
-
     return (
       <React.Fragment>
         {this.state.showVisualiser && (

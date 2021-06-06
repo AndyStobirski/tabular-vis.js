@@ -34,7 +34,7 @@ class VisualiseModal extends Component {
 
   convertToNumber = (pNum) => {
     var num = Number(pNum);
-    console.log(num);
+    //console.log(num);
     if (typeof num === "number" && isFinite(num)) return num;
     return null;
   };
@@ -66,7 +66,7 @@ class VisualiseModal extends Component {
       });
     }
 
-    console.log(values);
+    //console.log(values);
 
     if (iAm.dataType === "number") {
       for (var n = 0; n < values.length; n++) {
@@ -155,11 +155,11 @@ class VisualiseModal extends Component {
 
     var dataType = "string";
     if (ret.structure === "col") {
-      console.log("col", this.props.columnDefs[ret.value]);
+      //console.log("col", this.props.columnDefs[ret.value]);
       if (this.props.columnDefs[ret.value].dataType === "number")
         dataType = "number";
     } else {
-      console.log("row", this.props.columnDefs[0]);
+      //console.log("row", this.props.columnDefs[0]);
       if (this.props.columnDefs[0].dataType === "number") dataType = "number";
     }
     ret.dataType = dataType;
@@ -175,7 +175,7 @@ class VisualiseModal extends Component {
       return <div />;
     }
 
-    console.log(this.state.graphData);
+    //console.log(this.state.graphData);
 
     return (
       <Modal
