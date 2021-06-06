@@ -11,6 +11,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import * as d3 from "d3";
 
 // TODO Clean up load HTML tables dialogue
+// TODO Add drag and drop functionality for CSV files
+// TODO fix broken Bootstrap styles
 
 class SelectData extends Component {
   state = {
@@ -20,11 +22,7 @@ class SelectData extends Component {
     TablesReturned: null,
   };
 
-  componentDidMount() {
-    d3.csv("MOCK_DATA.csv", function (data) {
-      console.log(data);
-    });
-  }
+  componentDidMount() {}
 
   nextStep = (e) => {
     //    e.preventDefault();
