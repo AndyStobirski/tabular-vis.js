@@ -37,11 +37,11 @@ class ViewData extends Component {
     filename: "ExportedData_[YYYY]-[MM]-[DD]",
     rowDelimiter: "\r\n",
     columnDelimiter: ",",
+
+    dataSelected: null,
   };
 
   UpdateStateValue = (property, value, func) => {
-    console.log("UpdateStateValue");
-    console.log(property, value);
     this.setState({ [property]: value }, func);
   };
 
@@ -64,7 +64,7 @@ class ViewData extends Component {
     //get all the displayed data on the grid
     this.props.updateStateValue(
       "dataToClean",
-      this.hotTableComponent.current.hotInstance.getData(),
+      this.visibleGridData(),
       this.prevStep(e)
     );
   };
@@ -93,32 +93,8 @@ class ViewData extends Component {
       dropdownMenu: true,
       columnSorting: true,
       contextMenu: this.contextMenus(),
-      width: "100%",
+      //width: "400px",
     };
-  };
-
-  exportToFile = () => {
-    console.log(this.state);
-
-    const hotInstance = this.hotTableComponent.current.hotInstance;
-    const exportPlugin1 = hotInstance.getPlugin("exportFile");
-
-    exportPlugin1.downloadFile("csv", {
-      bom: false,
-
-      exportHiddenRows: this.state.exportHiddenRows,
-      exportHiddenColumns: this.state.exportHiddenColumns,
-      columnHeaders: this.state.columnHeaders,
-      rowHeaders: this.state.rowHeaders,
-
-      filename: this.state.filename,
-      columnDelimiter: this.state.columnDelimiter,
-      rowDelimiter: this.state.rowDelimiter,
-
-      fileExtension: "csv",
-
-      mimeType: "text/csv",
-    });
   };
 
   colHeaders = () => {
@@ -149,6 +125,9 @@ class ViewData extends Component {
       });
   };
 
+  /**
+   * Right clicking on a cell will launch two visualisation options: row and col
+   */
   contextMenus = () => {
     const visualiserShow = this.visualiserShow;
 
@@ -179,6 +158,26 @@ class ViewData extends Component {
   data = () => {
     return this.props.values.dataToView;
   };
+
+  visibleGridData = () => {
+    //the ? is the Optional Chaining Operator
+    //If a property exists, it proceeds to the next check, or returns the value.
+    //Any failure will immediately short-circuit and return undefined.
+
+    //On initial page load, current will be null
+    return this.hotTableComponent.current?.hotInstance.getData();
+  };
+
+  /**
+   * Returns indexes of the currently selected cells as an array of
+   * arrays [[startRow, startCol, endRow, endCol],...]
+   * @returns array of arrays
+   */
+  getSelectedCells = () => {
+    //console.log("getSelectedCells");
+    return this.hotTableComponent.current?.hotInstance.getSelected();
+  };
+
   //#endregion
 
   /**
@@ -259,21 +258,19 @@ class ViewData extends Component {
 
     return (
       <React.Fragment>
-        <VisualiseModal
-          show={this.state.showVisualiser}
-          close={this.visualiserClose}
-        />
+        {this.state.showVisualiser && (
+          <VisualiseModal
+            show={this.state.showVisualiser}
+            close={this.visualiserClose}
+            columnDefs={this.props.values.columnDefinitions}
+            gridData={this.visibleGridData()}
+            selectedCells={this.getSelectedCells()}
+          />
+        )}
         <ExportModal
           show={this.state.showDownload}
           close={this.downloadClose}
-          updateSettings={this.UpdateStateValue}
-          export={this.exportToFile}
-          exportHiddenRows={this.state.exportHiddenRows}
-          exportHiddenColumns={this.state.exportHiddenColumns}
-          columnHeaders={this.state.columnHeaders}
-          rowHeaders={this.state.rowHeaders}
-          filename={this.state.filename}
-          columnDelimiter={this.state.columnDelimiter}
+          tableInstance={this.hotTableComponent.current?.hotInstance}
         />
         <Form>
           <FormGroup>
@@ -303,6 +300,13 @@ class ViewData extends Component {
               ref={this.hotTableComponent}
               id={this.id}
               settings={this.hotSettings()}
+              style={{
+                width: "1110px",
+
+                height: "800px",
+
+                overflow: "hidden",
+              }}
             />
           </FormGroup>
         </Form>

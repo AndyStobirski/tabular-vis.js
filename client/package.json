@@ -10,6 +10,7 @@
     "ag-grid-community": "^25.3.0",
     "ag-grid-react": "^25.3.0",
     "bootstrap": "^4.6.0",
+    "d3": "^6.7.0",
     "handsontable": "^8.4.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",

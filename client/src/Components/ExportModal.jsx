@@ -4,6 +4,41 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 class ExportModal extends Component {
+  state = {
+    exportHiddenRows: false, // default false
+    exportHiddenColumns: false, // default false
+    columnHeaders: true, // default false
+    rowHeaders: false, // default false
+
+    filename: "ExportedData_[YYYY]-[MM]-[DD]",
+    rowDelimiter: "\r\n",
+    columnDelimiter: ",",
+  };
+
+  exportToFile = () => {
+    console.log(this.state);
+
+    const hotInstance = this.props.tableInstance;
+    const exportPlugin1 = hotInstance.getPlugin("exportFile");
+
+    exportPlugin1.downloadFile("csv", {
+      bom: false,
+
+      exportHiddenRows: this.state.exportHiddenRows,
+      exportHiddenColumns: this.state.exportHiddenColumns,
+      columnHeaders: this.state.columnHeaders,
+      rowHeaders: this.state.rowHeaders,
+
+      filename: this.state.filename,
+      columnDelimiter: this.state.columnDelimiter,
+      rowDelimiter: this.state.rowDelimiter,
+
+      fileExtension: "csv",
+
+      mimeType: "text/csv",
+    });
+  };
+
   render() {
     //console.log(this.props);
     return (
@@ -15,53 +50,45 @@ class ExportModal extends Component {
           <Form.Check
             type="checkbox"
             label="Export Hidden Rows"
-            checked={this.props.exportHiddenRows}
+            checked={this.state.exportHiddenRows}
             onChange={(e) =>
-              this.props.updateSettings("exportHiddenRows", e.target.checked)
+              this.setState({ exportHiddenRows: e.target.checked })
             }
           />
           <Form.Check
             type="checkbox"
             label="Export Hidden Cols"
-            checked={this.props.exportHiddenColumns}
+            checked={this.state.exportHiddenColumns}
             onChange={(e) =>
-              this.props.updateSettings("exportHiddenColumns", e.target.checked)
+              this.setState({ exportHiddenColumns: e.target.checked })
             }
           />
           <Form.Check
             type="checkbox"
             label="Column Headers"
-            checked={this.props.columnHeaders}
-            onChange={(e) =>
-              this.props.updateSettings("columnHeaders", e.target.checked)
-            }
+            checked={this.state.columnHeaders}
+            onChange={(e) => this.setState({ columnHeaders: e.target.checked })}
           />
           <Form.Check
             type="checkbox"
             label="Row Headers"
-            checked={this.props.rowHeaders}
-            onChange={(e) =>
-              this.props.updateSettings("rowHeaders", e.target.checked)
-            }
+            checked={this.state.rowHeaders}
+            onChange={(e) => this.setState({ rowHeaders: e.target.checked })}
           />
           <Form.Label>Filename</Form.Label>
           <Form.Control
-            value={this.props.filename}
-            onChange={(e) =>
-              this.props.updateSettings("filename", e.target.value)
-            }
+            value={this.state.filename}
+            onChange={(e) => this.setState({ filename: e.target.value })}
           />
           <Form.Label>Column delimeter</Form.Label>
           <Form.Control
-            value={this.props.columnDelimiter}
-            onChange={(e) =>
-              this.props.updateSettings("columnDelimiter", e.target.value)
-            }
+            value={this.state.columnDelimiter}
+            onChange={(e) => this.setState({ columnDelimiter: e.target.value })}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.close}>Close</Button>
-          <Button onClick={this.props.export}>Export</Button>
+          <Button onClick={this.exportToFile}>Export</Button>
         </Modal.Footer>
       </Modal>
     );

@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import * as d3 from "d3";
 
 // TODO Clean up load HTML tables dialogue
 
@@ -19,10 +20,14 @@ class SelectData extends Component {
     TablesReturned: null,
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    d3.csv("MOCK_DATA.csv", function (data) {
+      console.log(data);
+    });
+  }
 
   nextStep = (e) => {
-    e.preventDefault();
+    //    e.preventDefault();
     this.props.nextStep();
   };
 
@@ -52,12 +57,16 @@ class SelectData extends Component {
    * @param {*} e
    */
   tableButtonClicked = (e) => {
-    //used in the next page
-    this.props.updateStateValue("dataSelected", e);
+    this.packageDataForNextStep(e);
+    this.nextStep(e);
+  };
+
+  packageDataForNextStep = (selectedTable) => {
+    this.props.updateStateValue("dataSelected", selectedTable);
 
     const { dataArray } = this.props.values;
 
-    const data = dataArray[e];
+    const data = dataArray[selectedTable];
 
     //build the column definitions
     var colDef = [];
@@ -114,8 +123,12 @@ class SelectData extends Component {
     }
   };
 
+  //if (JSON.parse(body).length === 1) this.tableButtonClicked(0);
+
   parseTables = () => {
-    if (this.props.values.dataArray != null)
+    if (this.props.values.dataArray === null) {
+      return <h1>No tables found in URL</h1>;
+    } else {
       return (
         <div>
           <h1>{this.props.values.dataArray.length} tables found</h1>
@@ -128,7 +141,7 @@ class SelectData extends Component {
           </ListGroup>
         </div>
       );
-    else return <h1>No tables found in URL</h1>;
+    }
   };
 
   render() {
@@ -141,7 +154,7 @@ class SelectData extends Component {
           </FormGroup>
         </Form>
         <Form onSubmit={this.handleSubmit}>
-          <InputGroup className="mb-3">
+          <InputGroup className="mb-4">
             <FormControl
               placeholder="URL to load"
               aria-describedby="basic-addon2"

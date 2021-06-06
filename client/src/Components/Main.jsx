@@ -12,7 +12,8 @@ class Main extends Component {
     DataType: "csv",
 
     //can be data or a URL
-    InputData: "https://en.wikipedia.org/wiki/74th_Illinois_General_Assembly",
+    InputData:
+      "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/demo.html",
     //"https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
     //"Column1,Column2,Column3,Columb4\n1,2,3,9\n4,5,6,8\n7,8,9,8",
 
