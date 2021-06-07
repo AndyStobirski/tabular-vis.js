@@ -103,13 +103,21 @@ class CleanData extends Component {
     return (
       <Container>
         <Row>
-          <Col sm={1}>Required</Col>
           <Col>Column Name</Col>
+          <Col sm={1}>Required</Col>
+          <Col sm={1}>Allow Blank</Col>
           <Col>Data Type</Col>
         </Row>
         {columnDefinitions.map((item, index) => (
           <Row key={index}>
             <InputGroup className="mb-1" key={index}>
+              <Col>
+                <FormControl
+                  as="input"
+                  value={item["colName"]}
+                  onChange={this.update(index, "colName")}
+                />
+              </Col>
               <Col sm={1}>
                 <InputGroup.Prepend>
                   <InputGroup.Checkbox
@@ -118,12 +126,13 @@ class CleanData extends Component {
                   />
                 </InputGroup.Prepend>
               </Col>
-              <Col>
-                <FormControl
-                  as="input"
-                  value={item["colName"]}
-                  onChange={this.update(index, "colName")}
-                />
+              <Col sm={1}>
+                <InputGroup.Prepend>
+                  <InputGroup.Checkbox
+                    checked={item["allowBlank"]}
+                    onChange={this.update1(index, "allowBlank")}
+                  />
+                </InputGroup.Prepend>
               </Col>
 
               <Col>
@@ -133,10 +142,9 @@ class CleanData extends Component {
                   value={item["dataType"]}
                   onChange={this.update(index, "dataType")}
                 >
-                  <option value="string">text</option>
+                  <option value="text">text</option>
+                  <option value="numeric">numeric</option>
                   <option value="date">date</option>
-                  <option value="number">numeric</option>
-                  <option value="time">time</option>
                 </FormControl>
               </Col>
             </InputGroup>

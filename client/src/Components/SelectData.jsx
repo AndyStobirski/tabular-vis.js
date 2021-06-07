@@ -59,6 +59,13 @@ class SelectData extends Component {
     this.nextStep(e);
   };
 
+  convertToNumber = (pNum) => {
+    var num = Number(pNum);
+    //console.log(num);
+    if (typeof num === "number" && isFinite(num)) return num;
+    return null;
+  };
+
   packageDataForNextStep = (selectedTable) => {
     this.props.updateStateValue("dataSelected", selectedTable);
 
@@ -66,13 +73,17 @@ class SelectData extends Component {
 
     const data = dataArray[selectedTable];
 
+    console.log(data[0]);
+
     //build the column definitions
     var colDef = [];
     for (const key in data[0])
       colDef.push({
         colName: key,
         required: true,
-        dataType: "string",
+        dataType:
+          this.convertToNumber(data[0][key]) === null ? "text" : "numeric",
+        allowBlank: true,
       });
 
     //convert object array into array of arrays

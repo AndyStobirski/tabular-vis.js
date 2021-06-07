@@ -18,7 +18,7 @@ import ExportModal from "./ExportModal";
 // DONE Add options dialogue for export grid data
 // TODO Add support for data appropriate filtering of columns
 // TODO Investigate dynamic sizing of grid
-// TODO Customise filter context menu to remove options for inserting / removing columns
+// DONE Customise filter context menu to remove options for inserting / removing columns
 
 class ViewData extends Component {
   constructor(props, context) {
@@ -32,20 +32,14 @@ class ViewData extends Component {
     this.downloadClose = this.downloadClose.bind(this);
     this.visualiserShow = this.visualiserShow.bind(this);
     this.visualiserClose = this.visualiserClose.bind(this);
+
+    this.afterFilter = this.afterFilter.bind(this);
   }
 
   state = {
     showDownload: false,
     showVisualiser: false,
-
-    exportHiddenRows: false, // default false
-    exportHiddenColumns: false, // default false
-    columnHeaders: true, // default false
-    rowHeaders: false, // default false
-
-    filename: "ExportedData_[YYYY]-[MM]-[DD]",
-    rowDelimiter: "\r\n",
-    columnDelimiter: ",",
+    gridIsFiltered: false,
 
     dataSelected: null,
   };
@@ -86,23 +80,31 @@ class ViewData extends Component {
 
   //#region Grid configuration
   hotSettings = () => {
+    //console.log(this.columns());
+
     return {
       licenseKey: "non-commercial-and-evaluation",
       data: this.data(),
       colHeaders: this.colHeaders(),
       colWidths: this.colWidths(),
+      columns: this.columns(),
       rowHeaders: true,
-      overflow: "auto",
       readOnly: false,
       manualColumnMove: true,
       manualRowMove: true,
       manualColumnResize: true,
       manualRowResize: true,
       filters: true,
-      dropdownMenu: true,
+      //Only display the specified items in the column drop down
+      dropdownMenu: [
+        "filter_by_condition",
+        "filter_by_value",
+        "filter_action_bar", //OK, Cancel button
+      ],
+
       columnSorting: true,
       contextMenu: this.contextMenus(),
-      //width: "400px",
+      autoWrapRow: true,
     };
   };
 
@@ -115,13 +117,13 @@ class ViewData extends Component {
       });
   };
 
-  //https: //handsontable.com/docs/8.4.0/demo-custom-renderers.html
+  // https://handsontable.com/docs/9.0.0/demo-filtering.html
   columns = () => {
     const colDefs = this.props.values.columnDefinitions;
     return colDefs
       .filter((col) => col.required === true)
       .map((col) => {
-        return { data: col.colName, renderer: col.dataType };
+        return { type: col.dataType };
       });
   };
 
@@ -193,18 +195,26 @@ class ViewData extends Component {
    * Attached required events to HotTable grid
    */
   componentDidMount() {
-    const ht = this.hotTableComponent;
-    ht.current.hotInstance.addHook("afterColumnMove", this.afterColumnMove);
-    ht.current.hotInstance.addHook("afterFilter", this.afterFilter);
-    ht.current.hotInstance.addHook("afterRowMove", this.afterFilter);
+    const hti = this.hotTableComponent.current.hotInstance;
+    hti.addHook("afterColumnMove", this.afterColumnMove);
+    hti.addHook("afterFilter", this.afterFilter);
+    hti.addHook("afterRowMove", this.afterRowMove);
   }
 
-  afterFilter = () => {
+  afterRowMove = () => {
     //console.log("afterRowMove");
   };
 
-  afterFilter = () => {
-    //console.log("afterFiler");
+  afterFilter = (e) => {
+    /*
+      for some unknown reason uncommenting the next line will cause
+      the drop down filters to not work
+    */
+    //this.setState({ gridIsFiltered: true });
+  };
+
+  updategridIsFiltered = (pFiltered) => {
+    this.setState({ gridIsFiltered: pFiltered });
   };
 
   /**
@@ -236,6 +246,15 @@ class ViewData extends Component {
 
       this.props.updateStateValue("columnDefinitions", columnDefinitions);
     }
+  };
+
+  /**
+   * Remove all column filters
+   */
+  clearFilers = () => {
+    const ht = this.hotTableComponent;
+    ht.current.hotInstance.getPlugin("filters").clearConditions();
+    this.UpdateStateValue("gridIsFiltered", false);
   };
 
   //#region open close modals
@@ -290,8 +309,9 @@ class ViewData extends Component {
               <Button variant="secondary" onClick={this.downloadShow}>
                 Export to file
               </Button>
-              <Button variant="secondary">Middle</Button>
-              <Button variant="secondary">Right</Button>
+              <Button variant="secondary" onClick={this.clearFilers}>
+                Clear Filters
+              </Button>
             </ButtonGroup>
           </FormGroup>
         </Form>
@@ -304,9 +324,7 @@ class ViewData extends Component {
               settings={this.hotSettings()}
               style={{
                 width: "1110px",
-
                 height: "800px",
-
                 overflow: "hidden",
               }}
             />

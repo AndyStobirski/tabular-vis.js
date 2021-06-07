@@ -16,7 +16,7 @@ class ExportModal extends Component {
   };
 
   exportToFile = () => {
-    console.log(this.state);
+    //console.log(this.state);
 
     const hotInstance = this.props.tableInstance;
     const exportPlugin1 = hotInstance.getPlugin("exportFile");

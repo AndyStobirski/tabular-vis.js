@@ -156,11 +156,12 @@ class VisualiseModal extends Component {
     var dataType = "string";
     if (ret.structure === "col") {
       //console.log("col", this.props.columnDefs[ret.value]);
-      if (this.props.columnDefs[ret.value].dataType === "number")
-        dataType = "number";
+      if (this.props.columnDefs[ret.value].dataType === "numeric")
+        dataType = this.props.columnDefs[ret.value].dataType;
     } else {
       //console.log("row", this.props.columnDefs[0]);
-      if (this.props.columnDefs[0].dataType === "number") dataType = "number";
+      if (this.props.columnDefs[0].dataType === "numeric")
+        dataType = this.props.columnDefs[0].dataType;
     }
     ret.dataType = dataType;
 
