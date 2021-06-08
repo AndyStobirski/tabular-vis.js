@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import BarChar from "./BarChart";
+import * as d3 from "d3";
 
+import DrawChart from "./DrawChart";
 /**
  * VisualiseModal
  *    this.props:
@@ -17,27 +18,15 @@ import BarChar from "./BarChart";
  *
  */
 class VisualiseModal extends Component {
-  constructor(props) {
-    //console.log("VisualiseModal", "constructor");
-    super(props);
-
-    //console.log(this.props);
-
-    this.state = {
-      graphData: null,
-    };
-  }
+  state = {
+    graphData: null,
+    selectedGraph: null,
+  };
 
   componentDidMount() {
     this.graphData();
+    //if (this.state.selectedGraph === null) this.visualiserSelected("bar");
   }
-
-  convertToNumber = (pNum) => {
-    var num = Number(pNum);
-    //console.log(num);
-    if (typeof num === "number" && isFinite(num)) return num;
-    return null;
-  };
 
   /**
    * Build graph data used by D3 to display
@@ -45,11 +34,11 @@ class VisualiseModal extends Component {
   graphData = () => {
     const values = [];
 
-    const iAm = this.whatIsI();
+    const iAm = this.props.selectionData;
     const columnDefs = this.props.columnDefs;
     const gridData = this.props.gridData;
 
-    if (iAm.structure === "row") {
+    if (iAm.structure === "Row") {
       for (var ctr = 0; ctr < columnDefs.length; ctr++) {
         values.push({
           name: columnDefs[ctr],
@@ -66,14 +55,6 @@ class VisualiseModal extends Component {
       });
     }
 
-    //console.log(values);
-
-    if (iAm.dataType === "number") {
-      for (var n = 0; n < values.length; n++) {
-        values[n].value = this.convertToNumber(values[n].value);
-      }
-    }
-
     var graphData = {
       dataType: iAm.dataType,
       values: values,
@@ -87,7 +68,14 @@ class VisualiseModal extends Component {
    * cell of the structure selected.
    */
   setButtons = () => {
-    if (this.state.graphData.dataType === "number") {
+    console.log(this.state.graphData.dataType);
+
+    if (this.state.selectedGraph === null) {
+      console.log("Default chart");
+      this.visualiserSelected("bar");
+    }
+
+    if (this.state.graphData.dataType === "numeric") {
       return (
         <div>
           <Button variant="secondary" value="bar">
@@ -125,48 +113,28 @@ class VisualiseModal extends Component {
   };
 
   visualiserSelected = (e) => {
-    // eslint-disable-next-line default-case
-    switch (e.target.value) {
-      case "bar":
-        break;
+    console.log("plopsis", e);
+    this.setState({ selectedGraph: e });
+  };
 
-      case "line":
-        break;
+  DrawChart = () => {
+    const graphData = this.state.graphData.values;
+    const width = this.getContainerWidth();
 
-      case "box":
-        break;
-    }
+    DrawChart(graphData, width, this.state.selectedGraph);
   };
 
   /**
-   * Work out whether a row or column is selected by examining
-   * the selected cell data.
-   *
-   * @returns object defining the selected data and it's datatype which
-   *          determines the visualisations
+   * Get the width of the container the graph will be drawn into
+   * @returns
    */
-  whatIsI = () => {
-    const sel = this.props.selectedCells[0];
-
-    const ret = {
-      structure: sel[0] === sel[2] ? "row" : "col",
-      value: sel[0] === sel[2] ? sel[2] : sel[3],
-    };
-
-    var dataType = "string";
-    if (ret.structure === "col") {
-      //console.log("col", this.props.columnDefs[ret.value]);
-      if (this.props.columnDefs[ret.value].dataType === "numeric")
-        dataType = this.props.columnDefs[ret.value].dataType;
-    } else {
-      //console.log("row", this.props.columnDefs[0]);
-      if (this.props.columnDefs[0].dataType === "numeric")
-        dataType = this.props.columnDefs[0].dataType;
-    }
-    ret.dataType = dataType;
-
-    return ret;
+  getContainerWidth = () => {
+    var element = d3.select("#container").node();
+    if (!element) return 800;
+    return element.getBoundingClientRect().width;
   };
+
+  drawGraph = () => {};
 
   render() {
     //this method is to block the rendering of the page until the
@@ -176,7 +144,12 @@ class VisualiseModal extends Component {
       return <div />;
     }
 
-    //console.log(this.state.graphData);
+    const styles = {
+      container: {
+        display: "grid",
+        justifyItems: "center",
+      },
+    };
 
     return (
       <Modal
@@ -187,13 +160,22 @@ class VisualiseModal extends Component {
         size="xl" //could be large as well
       >
         <Modal.Header closeButton>
-          <Modal.Title>Visualise data</Modal.Title>
+          <Modal.Title>
+            Data visualisation of {this.props.selectionData.description()}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ButtonGroup onClick={this.visualiserSelected} size="sm">
+          <ButtonGroup
+            onClick={(e) => this.visualiserSelected(e.target.value)}
+            size="sm"
+          >
             {this.setButtons()}
           </ButtonGroup>
-          <BarChar data={this.state.graphData} />
+
+          <div id="container" style={styles.container}></div>
+          {this.DrawChart()}
+          <p />
+          <p />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.close}>Close</Button>

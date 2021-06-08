@@ -55,14 +55,17 @@ class ViewData extends Component {
    * @param {*} e
    */
   refineStep = (e) => {
-    e.preventDefault();
+    //Build the column definitions based on live instance data
+    const hi = this.hotTableComponent.current.hotInstance;
+    var colDefs = hi.getColHeader().map((item, idx) => {
+      return {
+        colName: item,
+        required: true,
+        dataType: hi.getDataType(1, idx, 1, idx),
+      };
+    });
 
-    //we want to remove the columns that have not been selected
-    const columnDefinitions = this.props.values.columnDefinitions;
-    this.props.updateStateValue(
-      "columnDefinitions",
-      columnDefinitions.filter((col) => col.required === true)
-    );
+    this.props.updateStateValue("columnDefinitions", colDefs);
 
     //get all the displayed data on the grid
     this.props.updateStateValue(
@@ -81,10 +84,10 @@ class ViewData extends Component {
   //#region Grid configuration
   hotSettings = () => {
     //console.log(this.columns());
-
+    //console.log("HotSettings");
     return {
       licenseKey: "non-commercial-and-evaluation",
-      data: this.data(),
+      data: this.props.values.dataToView,
       colHeaders: this.colHeaders(),
       colWidths: this.colWidths(),
       columns: this.columns(),
@@ -101,7 +104,6 @@ class ViewData extends Component {
         "filter_by_value",
         "filter_action_bar", //OK, Cancel button
       ],
-
       columnSorting: true,
       contextMenu: this.contextMenus(),
       autoWrapRow: true,
@@ -109,12 +111,14 @@ class ViewData extends Component {
   };
 
   colHeaders = () => {
-    const colDefs = this.props.values.columnDefinitions;
-    return colDefs
-      .filter((col) => col.required === true)
-      .map((col) => {
-        return col.colName;
-      });
+    return this.props.values.colHeadersView;
+
+    // const colDefs = this.props.values.columnDefinitions;
+    // return colDefs
+    //   .filter((col) => col.required === true)
+    //   .map((col) => {
+    //     return col.colName;
+    //   });
   };
 
   // https://handsontable.com/docs/9.0.0/demo-filtering.html
@@ -182,11 +186,35 @@ class ViewData extends Component {
   /**
    * Returns indexes of the currently selected cells as an array of
    * arrays [[startRow, startCol, endRow, endCol],...]
-   * @returns array of arrays
+   * @returns oject describing the selected item
    */
   getSelectedCells = () => {
-    //console.log("getSelectedCells");
-    return this.hotTableComponent.current?.hotInstance.getSelected();
+    var selectionData =
+      this.hotTableComponent.current?.hotInstance.getSelected();
+    const sel = selectionData[0];
+
+    const ret = {
+      structure: sel[0] === sel[2] ? "Row" : "Column",
+      value: sel[0] === sel[2] ? sel[2] : sel[3],
+      description: function () {
+        return this.structure + " " + (this.value + 1);
+      },
+    };
+
+    var dataType = "string";
+    var columnDefinitions = this.props.values.columnDefinitions;
+    if (ret.structure === "Column") {
+      //console.log("col", this.props.columnDefs[ret.value]);
+      if (columnDefinitions[ret.value].dataType === "numeric")
+        dataType = columnDefinitions[ret.value].dataType;
+    } else {
+      //console.log("row", this.props.columnDefs[0]);
+      if (columnDefinitions[0].dataType === "numeric")
+        dataType = columnDefinitions[0].dataType;
+    }
+    ret.dataType = dataType;
+
+    return ret;
   };
 
   //#endregion
@@ -233,19 +261,17 @@ class ViewData extends Component {
     movePossible,
     orderChanged
   ) => {
-    if (orderChanged) {
-      var columnDefinitions = this.props.values.columnDefinitions;
-      console.log("columnDefinitions", columnDefinitions);
-
-      var removed = columnDefinitions.splice(
-        movedColumns[0],
-        movedColumns.length
-      );
-
-      columnDefinitions.splice(dropIndex - movedColumns.length, 0, ...removed);
-
-      this.props.updateStateValue("columnDefinitions", columnDefinitions);
-    }
+    // if (orderChanged) {
+    //   var columnDefinitions = this.props.values.columnDefinitions;
+    //   //console.log("columnDefinitions", columnDefinitions);
+    //   var removed = columnDefinitions.splice(
+    //     movedColumns[0],
+    //     movedColumns.length
+    //   );
+    //   columnDefinitions.splice(dropIndex - movedColumns.length, 0, ...removed);
+    //   this.props.updateStateValue("columnDefinitions", columnDefinitions);
+    //   console.log("columnDefinitions", columnDefinitions);
+    // }
   };
 
   /**
@@ -277,6 +303,8 @@ class ViewData extends Component {
   //#endregion
 
   render() {
+    //console.log(this.data());
+
     return (
       <React.Fragment>
         {this.state.showVisualiser && (
@@ -285,7 +313,7 @@ class ViewData extends Component {
             close={this.visualiserClose}
             columnDefs={this.props.values.columnDefinitions}
             gridData={this.visibleGridData()}
-            selectedCells={this.getSelectedCells()}
+            selectionData={this.getSelectedCells()}
           />
         )}
         <ExportModal

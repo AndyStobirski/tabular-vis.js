@@ -31,7 +31,7 @@ class Main extends Component {
     dataToClean: null,
 
     dataToView: null,
-    colsToView: null,
+    colHeadersView: null,
 
     visualise: null,
   };
@@ -85,7 +85,7 @@ class Main extends Component {
       dataArray,
       columnDefinitions,
       dataToView,
-      colsToView,
+      colHeadersView,
       dataToClean,
       visualise,
       TestLinks,
@@ -99,7 +99,7 @@ class Main extends Component {
       dataArray,
       columnDefinitions,
       dataToView,
-      colsToView,
+      colHeadersView,
       dataToClean,
       visualise,
       TestLinks,

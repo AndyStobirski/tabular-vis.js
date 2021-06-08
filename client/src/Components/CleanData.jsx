@@ -8,13 +8,20 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-// TODO add auto detection of data types
+// DONE add auto detection of data types
 // TODO add utilities to clean data such as distinct, remove rows with blank values or rows with bad data
 
 class CleanData extends Component {
   nextStep = (e) => {
     e.preventDefault();
     this.props.nextStep();
+  };
+
+  convertToNumber = (pNum) => {
+    var num = Number(pNum);
+    //console.log(num);
+    if (typeof num === "number" && isFinite(num)) return num;
+    return null;
   };
 
   /**
@@ -26,31 +33,52 @@ class CleanData extends Component {
 
     const dataToClean = this.props.values.dataToClean;
 
-    //console.log(dataToClean);
-
     //get the column information: colsToDelete and colsToView
     const columnDefinitions = this.props.values.columnDefinitions;
     let colsToRemove = [];
-    let colsToView = [];
+    let colHeadersView = [];
     columnDefinitions.forEach((el, ind) => {
       if (!el.required) {
         colsToRemove.push(ind);
       } else {
-        colsToView.push(el.colName);
+        colHeadersView.push(el.colName);
       }
     });
-
     colsToRemove.sort().reverse();
 
+    //console.log("dataToClean", dataToClean);
+    //perform the data conversions
+
+    //make a value copy of the array or arrays
+    //https://stackoverflow.com/a/13756775/500181
+    var data = dataToClean.map(function (row) {
+      return row.slice();
+    });
+
+    //console.log(columnDefinitions);
+    data.forEach((row, rIdx) => {
+      row.forEach((col, cIdx) => {
+        if (
+          columnDefinitions[cIdx].required &&
+          columnDefinitions[cIdx].dataType === "numeric"
+        ) {
+          row[cIdx] = this.convertToNumber(col);
+        }
+      });
+      //console.log(row);
+    });
+
     //delete the columns that are not checked
-    var data = dataToClean.slice(0);
     data.forEach((row, ind) => {
       colsToRemove.forEach((d) => {
         row.splice(d, 1);
       });
     });
 
-    this.props.updateStateValue("colsToView", colsToView);
+    //console.log("colHeadersView", colHeadersView);
+    this.props.updateStateValue("colHeadersView", colHeadersView);
+
+    //console.log("dataToView", data);
     this.props.updateStateValue("dataToView", data, this.nextStep(e));
   };
 
@@ -88,7 +116,6 @@ class CleanData extends Component {
     const item = { ...columnDefinitions[index] };
     item[propName] = e.target.checked;
     columnDefinitions[index] = item;
-
     this.props.updateStateValue("columnDefinitions", columnDefinitions);
   };
 
@@ -104,8 +131,8 @@ class CleanData extends Component {
       <Container>
         <Row>
           <Col>Column Name</Col>
-          <Col sm={1}>Required</Col>
-          <Col sm={1}>Allow Blank</Col>
+          <Col sm={1}>Display</Col>
+          {/* <Col sm={1}>Allow Blank</Col> */}
           <Col>Data Type</Col>
         </Row>
         {columnDefinitions.map((item, index) => (
@@ -126,14 +153,14 @@ class CleanData extends Component {
                   />
                 </InputGroup.Prepend>
               </Col>
-              <Col sm={1}>
+              {/* <Col sm={1}>
                 <InputGroup.Prepend>
                   <InputGroup.Checkbox
                     checked={item["allowBlank"]}
                     onChange={this.update1(index, "allowBlank")}
                   />
                 </InputGroup.Prepend>
-              </Col>
+              </Col> */}
 
               <Col>
                 <FormControl

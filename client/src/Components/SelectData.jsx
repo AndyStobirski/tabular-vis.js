@@ -8,7 +8,6 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import * as d3 from "d3";
 
 // TODO Clean up load HTML tables dialogue
 // TODO Add drag and drop functionality for CSV files
@@ -73,7 +72,7 @@ class SelectData extends Component {
 
     const data = dataArray[selectedTable];
 
-    console.log(data[0]);
+    //console.log(data[0]);
 
     //build the column definitions
     var colDef = [];
@@ -98,41 +97,6 @@ class SelectData extends Component {
 
     this.props.updateStateValue("columnDefinitions", colDef, this.nextStep());
   };
-
-  loadFile = (e) => {
-    //console.log("loadFile", e);
-
-    // eslint-disable-next-line default-case
-    switch (e) {
-      case "1": //load HTML
-        //console.log("HO");
-
-        //const {Tabletojson: tabletojson} = require('../dist');
-        const fs = require("fs");
-        const path = require("path");
-
-        const html = fs.readFileSync(
-          path.resolve(__dirname, "C:\\github\\table-vis.js\\demo\\demo.html"),
-          { encoding: "UTF-8" }
-        );
-
-        //console.log(html);
-
-        //const converted = tabletojson.convert(html);
-
-        //console.log(converted);
-
-        break;
-      case 2: //load CSV
-        break;
-
-      default:
-        //console.log("nothing");
-        break;
-    }
-  };
-
-  //if (JSON.parse(body).length === 1) this.tableButtonClicked(0);
 
   parseTables = () => {
     if (this.props.values.dataArray === null) {
@@ -177,7 +141,11 @@ class SelectData extends Component {
               onSelect={this.predefinedDataSources}
             >
               {this.props.values.TestLinks.map((item, idx) => {
-                return <Dropdown.Item eventKey={idx}>{item}</Dropdown.Item>;
+                return (
+                  <Dropdown.Item eventKey={idx} key={idx}>
+                    {item}
+                  </Dropdown.Item>
+                );
               })}
             </DropdownButton>
             <FormControl
