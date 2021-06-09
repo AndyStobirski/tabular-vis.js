@@ -6,7 +6,7 @@ import * as d3 from "d3";
 //text on x axis
 //https://www.d3-graph-gallery.com/graph/lollipop_basic.html
 
-const DrawWordCloud = function (values, selector, dimensions) {
+const DrawChartWord = function (values, selector, dimensions) {
   dimensions.margins.left = 100;
 
   // append the svg object to the body of the page
@@ -93,4 +93,4 @@ const DrawWordCloud = function (values, selector, dimensions) {
     .attr("stroke", "black");
 };
 
-export default DrawWordCloud;
+export default DrawChartWord;

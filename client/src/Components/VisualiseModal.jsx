@@ -25,7 +25,6 @@ class VisualiseModal extends Component {
 
   componentDidMount() {
     this.graphData();
-    //if (this.state.selectedGraph === null) this.visualiserSelected("bar");
   }
 
   /**

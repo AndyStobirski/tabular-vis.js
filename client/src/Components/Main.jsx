@@ -17,7 +17,7 @@ class Main extends Component {
       "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
 
     TestLinks: [
-      "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/demo.html",
+      "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
       "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
       "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
     ],

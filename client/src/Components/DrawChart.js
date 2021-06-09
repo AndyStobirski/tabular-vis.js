@@ -1,7 +1,7 @@
-import DrawBarChart from "./DrawBarChart";
-import DrawLineChart from "./DrawLineChart";
-import DrawPieChart from "./DrawPieChart";
-import DrawWordCloud from "./DrawWordCloud";
+import DrawChartBar from "./DrawChartBar";
+import DrawChartLine from "./DrawChartLine";
+import DrawChartPie from "./DrawChartPie";
+import DrawChartWord from "./DrawChartWord";
 import * as d3 from "d3";
 
 /**
@@ -12,17 +12,16 @@ import * as d3 from "d3";
  */
 const DrawChart = function (values, width, chartType) {
   const height = 500;
-  const margin = {
-    top: 20,
-    right: 20,
-    bottom: 30,
-    left: 40,
-  };
-
   const dimensions = {
     containerHeight: height,
     containerWidth: width,
-    margins: margin,
+    margins: {
+      top: 20,
+      right: 20,
+      bottom: 30,
+      left: 40,
+    },
+
     internalHeight: function () {
       return this.containerHeight - this.margins.top - this.margins.bottom;
     },
@@ -30,6 +29,8 @@ const DrawChart = function (values, width, chartType) {
       return this.containerWidth - this.margins.left - this.margins.right;
     },
   };
+
+  console.log(JSON.stringify(values));
 
   const selector = "#container";
 
@@ -39,19 +40,19 @@ const DrawChart = function (values, width, chartType) {
   // eslint-disable-next-line default-case
   switch (chartType) {
     case "line":
-      DrawLineChart(values, selector, dimensions);
+      DrawChartLine(values, selector, dimensions);
       break;
 
     case "bar":
-      DrawBarChart(values, selector, dimensions);
+      DrawChartBar(values, selector, dimensions);
       break;
 
     case "pie":
-      DrawPieChart(values, selector, dimensions);
+      DrawChartPie(values, selector, dimensions);
       break;
 
     case "word":
-      DrawWordCloud(values, selector, dimensions);
+      DrawChartWord(values, selector, dimensions);
       break;
   }
 };
