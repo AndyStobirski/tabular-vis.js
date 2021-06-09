@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import * as d3 from "d3";
 
-import DrawChart from "./DrawChart";
+import DrawChart from "../Functions/DrawChart";
 /**
  * VisualiseModal
  *    this.props:

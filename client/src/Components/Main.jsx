@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
+import SlidingPane from "react-sliding-pane";
+import "react-sliding-pane/dist/react-sliding-pane.css";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -34,6 +36,8 @@ class Main extends Component {
     colHeadersView: null,
 
     visualise: null,
+
+    isPaneOpenLeft: false,
   };
 
   /**
@@ -74,8 +78,7 @@ class Main extends Component {
     });
   };
 
-  //figure out what step we're on and display the relevant page
-  render() {
+  getPage = () => {
     const { step } = this.state;
     const {
       DataType,
@@ -132,13 +135,36 @@ class Main extends Component {
         return (
           <ViewData
             prevStep={this.prevStep}
-            nextStep={this.nextStep}
             handleChange={this.handleChange}
             values={values}
             updateStateValue={this.UpdateStateValue}
           />
         );
     }
+  };
+
+  //figure out what step we're on and display the relevant page
+  render() {
+    return (
+      <div>
+        <div style={{ marginTop: "32px" }}>
+          <button onClick={() => this.setState({ isPaneOpenLeft: true })}>
+            Click me to open left pane with 20% width!
+          </button>
+        </div>
+        <SlidingPane
+          closeIcon={<div>Close</div>}
+          isOpen={this.state.isPaneOpenLeft}
+          title="Transform History"
+          from="left"
+          width="200px"
+          onRequestClose={() => this.setState({ isPaneOpenLeft: false })}
+        >
+          <div>And I am pane content on left.</div>
+        </SlidingPane>
+        {this.getPage()}
+      </div>
+    );
   }
 }
 

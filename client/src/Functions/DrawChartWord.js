@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import ChartBuildBody from "./ChartBuildBody";
 
 //text on y axis
 //https://www.d3-graph-gallery.com/graph/lollipop_ordered.html
@@ -6,27 +7,17 @@ import * as d3 from "d3";
 //text on x axis
 //https://www.d3-graph-gallery.com/graph/lollipop_basic.html
 
-const DrawChartWord = function (values, selector, dimensions) {
+const DrawChartWord = function (data, selector, dimensions) {
+  //need a bigger left border for the labels
   dimensions.margins.left = 100;
-
-  // append the svg object to the body of the page
-  var svg = d3
-    .select(selector)
-    .append("svg")
-    .attr("width", dimensions.containerWidth)
-    .attr("height", dimensions.containerHeight)
-    .append("g")
-    .attr(
-      "transform",
-      "translate(" +
-        dimensions.margins.left +
-        "," +
-        dimensions.margins.top +
-        ")"
-    );
+  var svg = ChartBuildBody(selector, dimensions);
 
   //an array of arrays [[key, [,]]]
-  var d3Groups = d3.groups(values, (v) => v.value);
+  var d3Groups = d3.groups(data, (v) => v.value);
+  // //sort from big to little
+  // data = data.sort(function (b, a) {
+  //   return a[1].length - b[1].length;
+  // });
 
   // Add X axis
   var x = d3
