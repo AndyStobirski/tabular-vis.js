@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
-import "react-sliding-pane/dist/react-sliding-pane.css";
-import Button from "react-bootstrap/Button";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {

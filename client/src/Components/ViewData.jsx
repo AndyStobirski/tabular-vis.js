@@ -230,7 +230,7 @@ class ViewData extends Component {
   }
 
   afterRowMove = () => {
-    //console.log("afterRowMove");
+    console.log("afterRowMove");
   };
 
   afterFilter = (e) => {
@@ -239,6 +239,7 @@ class ViewData extends Component {
       the drop down filters to not work
     */
     //this.setState({ gridIsFiltered: true });
+    console.log("afterFilter");
   };
 
   updategridIsFiltered = (pFiltered) => {
@@ -261,6 +262,7 @@ class ViewData extends Component {
     movePossible,
     orderChanged
   ) => {
+    console.log("AFTERCOLUMNMOVE");
     // if (orderChanged) {
     //   var columnDefinitions = this.props.values.columnDefinitions;
     //   //console.log("columnDefinitions", columnDefinitions);
