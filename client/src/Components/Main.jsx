@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
+import DockLayout from "rc-dock";
+import "rc-dock/dist/rc-dock.css";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -38,6 +40,48 @@ class Main extends Component {
     isPaneOpenLeft: false,
 
     screenTitles: ["Select Data", "Clean Data", "View Data"],
+
+    layoutData: {
+      dockbox: {
+        mode: "horizontal",
+        children: [
+          {
+            mode: "vertical",
+            children: [
+              {
+                panelLock: { panelStyle: "main" },
+              },
+            ],
+          },
+        ],
+      },
+      floatbox: {
+        mode: "float",
+        children: [
+          {
+            tabs: [
+              {
+                id: "float",
+                title: "Transform history",
+                content: <div>History here</div>,
+                group: "allowWindow",
+              },
+            ],
+            x: 0,
+            y: 0,
+            w: 200,
+            h: 300,
+          },
+        ],
+      },
+    },
+    groups: {
+      allowWindow: {
+        floatable: true,
+        //newWindow: true,
+        minimizable: true,
+      },
+    },
   };
 
   /**
@@ -148,7 +192,22 @@ class Main extends Component {
 
   //figure out what step we're on and display the relevant page
   render() {
-    return <div>{this.getPage()}</div>;
+    return (
+      <div>
+        <DockLayout
+          defaultLayout={this.state.layoutData}
+          groups={this.state.groups}
+          style={{
+            position: "absolute",
+            left: 10,
+            top: 10,
+            right: 10,
+            bottom: 10,
+          }}
+        />
+        {this.getPage()}
+      </div>
+    );
   }
 }
 
