@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
-import SlidingPane from "react-sliding-pane";
 import "react-sliding-pane/dist/react-sliding-pane.css";
+import Button from "react-bootstrap/Button";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -38,6 +38,8 @@ class Main extends Component {
     visualise: null,
 
     isPaneOpenLeft: false,
+
+    screenTitles: ["Select Data", "Clean Data", "View Data"],
   };
 
   /**
@@ -143,28 +145,12 @@ class Main extends Component {
     }
   };
 
+  //https://codepen.io/ekros/pen/MeeMGj
+  //https://ticlo.github.io/rc-dock/examples/#basic
+
   //figure out what step we're on and display the relevant page
   render() {
-    return (
-      <div>
-        <div style={{ marginTop: "32px" }}>
-          <button onClick={() => this.setState({ isPaneOpenLeft: true })}>
-            Click me to open left pane with 20% width!
-          </button>
-        </div>
-        <SlidingPane
-          closeIcon={<div>Close</div>}
-          isOpen={this.state.isPaneOpenLeft}
-          title="Transform History"
-          from="left"
-          width="200px"
-          onRequestClose={() => this.setState({ isPaneOpenLeft: false })}
-        >
-          <div>And I am pane content on left.</div>
-        </SlidingPane>
-        {this.getPage()}
-      </div>
-    );
+    return <div>{this.getPage()}</div>;
   }
 }
 

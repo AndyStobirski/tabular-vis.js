@@ -12,6 +12,7 @@ class NavBavr extends Component {
     return (
       <Navbar bg="primary" expand="sm" variant="dark">
         <Navbar.Brand>{title}</Navbar.Brand>
+        <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
         {prevStep != null && (
           <Button variant="primary" onClick={prevStep}>
             Previous
