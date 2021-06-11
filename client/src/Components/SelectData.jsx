@@ -8,10 +8,13 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import ConversionUtilities from "../Functions/ConversionUtilities";
+import Alert from "react-bootstrap/Alert";
 
 // TODO Clean up load HTML tables dialogue
 // TODO Add drag and drop functionality for CSV files
 // TODO Add modal loading screen for URL load
+// DONE decouple table processing logic to new function
 
 class SelectData extends Component {
   state = {
@@ -19,12 +22,10 @@ class SelectData extends Component {
     post: "",
     tablesFound: 0,
     TablesReturned: null,
+    DataLoaded: false,
   };
 
-  componentDidMount() {}
-
   nextStep = (e) => {
-    //    e.preventDefault();
     this.props.nextStep();
   };
 
@@ -34,6 +35,8 @@ class SelectData extends Component {
    */
   handleSubmit = async (e) => {
     e.preventDefault();
+
+    this.props.addHistory("Loaded page", this.props.values.InputData);
 
     const response = await fetch("/api/LoadTable", {
       method: "POST",
@@ -46,74 +49,58 @@ class SelectData extends Component {
 
     //a response of JSON.parse(body).length == 0
     //indicates the page contains no tables
+
+    this.setState({ DataLoaded: true });
+
     this.props.updateStateValue("dataArray", JSON.parse(body));
   };
 
   /**
-   * We have selected a HTML table, so advance to the next page
+   * We have selected a HTML table, so process it and advance to the next page
    * @param {*} e
    */
   tableButtonClicked = (e) => {
-    this.packageDataForNextStep(e);
-    this.nextStep(e);
-  };
-
-  convertToNumber = (pNum) => {
-    var num = Number(pNum);
-    //console.log(num);
-    if (typeof num === "number" && isFinite(num)) return num;
-    return null;
-  };
-
-  packageDataForNextStep = (selectedTable) => {
-    this.props.updateStateValue("dataSelected", selectedTable);
+    this.props.addHistory("Selected table", e + 1);
 
     const { dataArray } = this.props.values;
+    const data = dataArray[e];
 
-    const data = dataArray[selectedTable];
+    var convertedData = ConversionUtilities.processTableTable(data);
 
-    //console.log(data[0]);
-
-    //build the column definitions
-    var colDef = [];
-    for (const key in data[0])
-      colDef.push({
-        colName: key,
-        required: true,
-        dataType:
-          this.convertToNumber(data[0][key]) === null ? "text" : "numeric",
-        allowBlank: true,
-      });
-
-    //convert object array into array of arrays
-    var conv = data.map(function (obj) {
-      return Object.keys(obj).map(function (key) {
-        return obj[key];
-      });
-    });
-
-    //console.log(conv);
-    this.props.updateStateValue("dataToClean", conv);
-
-    this.props.updateStateValue("columnDefinitions", colDef, this.nextStep());
+    this.props.updateStateValue("dataSelected", e);
+    this.props.updateStateValue("dataToClean", convertedData.data);
+    this.props.updateStateValue(
+      "columnDefinitions",
+      convertedData.columnDefinitions,
+      this.nextStep()
+    );
   };
 
+  /**
+   * Build the table array returned from the page load into a list
+   * @returns
+   */
   parseTables = () => {
-    if (this.props.values.dataArray === null) {
-      return <h1>No tables found in URL</h1>;
-    } else {
-      return (
-        <div>
-          <h1>{this.props.values.dataArray.length} tables found</h1>
-          <ListGroup onSelect={this.tableButtonClicked}>
-            {this.props.values.dataArray.map((option, index) => (
-              <ListGroup.Item eventKey={index} key={index}>
-                Table {index}({this.props.values.dataArray[index].length} Rows)
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </div>
-      );
+    if (this.state.DataLoaded) {
+      if (this.props.values.dataArray === null) {
+        return <Alert variant="warning">No tables found</Alert>;
+      } else {
+        return (
+          <div>
+            <Alert variant="info">
+              {this.props.values.dataArray.length} tables found
+            </Alert>
+            <ListGroup onSelect={this.tableButtonClicked}>
+              {this.props.values.dataArray.map((option, index) => (
+                <ListGroup.Item eventKey={index} key={index}>
+                  Table {index + 1}({this.props.values.dataArray[index].length}{" "}
+                  Rows)
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
+        );
+      }
     }
   };
 
@@ -175,9 +162,6 @@ class SelectData extends Component {
           >
             <Dropdown.Item eventKey="1">Webpage</Dropdown.Item>
             <Dropdown.Item eventKey="2">CSV</Dropdown.Item>
-            {/* <Dropdown.Item href="#">Something else here</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item href="#">Separated link</Dropdown.Item> */}
           </DropdownButton>
         </InputGroup>
 
