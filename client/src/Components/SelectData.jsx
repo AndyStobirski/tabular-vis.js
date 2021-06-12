@@ -81,14 +81,15 @@ class SelectData extends Component {
    * @returns
    */
   parseTables = () => {
-    if (this.state.DataLoaded) {
+    if (this.state.DataLoaded || this.props.values.dataArray) {
       if (this.props.values.dataArray === null) {
         return <Alert variant="warning">No tables found</Alert>;
       } else {
         return (
           <div>
             <Alert variant="info">
-              {this.props.values.dataArray.length} tables found
+              {this.props.values.dataArray.length} tables found at{" "}
+              {this.props.values.InputData}
             </Alert>
             <ListGroup onSelect={this.tableButtonClicked}>
               {this.props.values.dataArray.map((option, index) => (

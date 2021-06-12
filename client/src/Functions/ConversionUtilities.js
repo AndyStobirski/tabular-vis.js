@@ -49,6 +49,54 @@ const ConversionUtilities = {
       columnDefinitions: colDef,
     });
   },
+
+  buildDataToView: function (pDataToClean, pColumnDefinitions) {
+    //get the column information: colsToDelete and colsToView
+    let colsToRemove = [];
+    let colHeadersView = [];
+    pColumnDefinitions.forEach((el, ind) => {
+      if (!el.required) {
+        colsToRemove.push(ind);
+      } else {
+        colHeadersView.push(el.colName);
+      }
+    });
+    colsToRemove.sort().reverse();
+
+    //make a value copy of the array or arrays
+    //https://stackoverflow.com/a/13756775/500181
+    var data = pDataToClean.map(function (row) {
+      return row.slice();
+    });
+
+    //console.log(columnDefinitions);
+    data.forEach((row, rIdx) => {
+      row.forEach((col, cIdx) => {
+        if (
+          pColumnDefinitions[cIdx].required &&
+          pColumnDefinitions[cIdx].dataType === "numeric"
+        ) {
+          row[cIdx] = ConversionUtilities.convertToNumber(col);
+        }
+      });
+    });
+
+    //delete the columns that are not checked
+    data.forEach((row, ind) => {
+      colsToRemove.forEach((d) => {
+        row.splice(d, 1);
+      });
+    });
+
+    //console.log(data, colHeadersView);
+
+    var retVal = {
+      colHeadersView: colHeadersView,
+      dataToView: data,
+    };
+
+    return retVal;
+  },
 };
 
 export default ConversionUtilities;

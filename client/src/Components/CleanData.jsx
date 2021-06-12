@@ -7,9 +7,12 @@ import FormGroup from "react-bootstrap/FormGroup";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import ConversionUtilities from "../Functions/ConversionUtilities";
+import Table from "react-bootstrap/Table";
 
 // DONE add auto detection of data types
 // TODO add utilities to clean data such as distinct, remove rows with blank values or rows with bad data
+// DONE decouple table processing logic to new function
 
 class CleanData extends Component {
   nextStep = (e) => {
@@ -17,72 +20,83 @@ class CleanData extends Component {
     this.props.nextStep();
   };
 
-  convertToNumber = (pNum) => {
-    var num = Number(pNum);
-    //console.log(num);
-    if (typeof num === "number" && isFinite(num)) return num;
-    return null;
+  //if a row has been changed, store it here and use to update the history
+  //when exiting the page
+  state = {
+    changedRows: [],
   };
 
   /**
-   * Data has been selected, so move onto the view step
+   * Data has been edited, so package it, update the history and move
+   * onto the view step
    * @param {*} e
    */
   buildDataSet = (e) => {
-    //console.log(this.props.values);
-
     const dataToClean = this.props.values.dataToClean;
-
-    //get the column information: colsToDelete and colsToView
     const columnDefinitions = this.props.values.columnDefinitions;
-    let colsToRemove = [];
-    let colHeadersView = [];
-    columnDefinitions.forEach((el, ind) => {
-      if (!el.required) {
-        colsToRemove.push(ind);
-      } else {
-        colHeadersView.push(el.colName);
+
+    var retVal = ConversionUtilities.buildDataToView(
+      dataToClean,
+      columnDefinitions
+    );
+    //console.log(retVal);
+
+    //console.log(this.state.changedRows);
+
+    this.state.changedRows.forEach((change, index) => {
+      var currentCol = columnDefinitions[index];
+      console.log(currentCol);
+
+      if (change.name) {
+        this.props.addHistory(
+          "Column name change",
+          "changed column " + (index + 1) + " to " + currentCol.colName
+        );
       }
-    });
-    colsToRemove.sort().reverse();
 
-    //console.log("dataToClean", dataToClean);
-    //perform the data conversions
+      if (change.visible) {
+        this.props.addHistory(
+          "Column visibility change",
+          "changed column " + (index + 1) + " to " + currentCol.visible
+        );
+      }
 
-    //make a value copy of the array or arrays
-    //https://stackoverflow.com/a/13756775/500181
-    var data = dataToClean.map(function (row) {
-      return row.slice();
-    });
+      if (change.dataType) {
+        this.props.addHistory(
+          "Column datatype change",
+          "changed column " + (index + 1) + " to " + currentCol.dataType
+        );
+      }
 
-    //console.log(columnDefinitions);
-    data.forEach((row, rIdx) => {
-      row.forEach((col, cIdx) => {
-        if (
-          columnDefinitions[cIdx].required &&
-          columnDefinitions[cIdx].dataType === "numeric"
-        ) {
-          row[cIdx] = this.convertToNumber(col);
-        }
-      });
-      //console.log(row);
+      //console.log(change, index);
     });
 
-    //delete the columns that are not checked
-    data.forEach((row, ind) => {
-      colsToRemove.forEach((d) => {
-        row.splice(d, 1);
-      });
-    });
+    //this.props.addHistory
 
-    //console.log("colHeadersView", colHeadersView);
-    this.props.updateStateValue("colHeadersView", colHeadersView);
+    this.props.updateStateValue("colHeadersView", retVal.colHeadersView);
 
-    //console.log("dataToView", data);
-    this.props.updateStateValue("dataToView", data, this.nextStep(e));
+    this.props.updateStateValue(
+      "dataToView",
+      retVal.dataToView,
+      this.nextStep(e)
+    );
   };
 
-  componentDidMount() {}
+  /**
+   * Set the changedRows array to null
+   */
+  componentDidMount() {
+    const columnDefinitions = this.props.values.columnDefinitions;
+
+    var data = columnDefinitions.map((cd) => {
+      return { name: false, visible: false, dataType: false };
+    });
+
+    console.log(data);
+    this.setState({
+      changedRows: data,
+    });
+  }
 
   prevStep = (e) => {
     e.preventDefault();
@@ -96,12 +110,22 @@ class CleanData extends Component {
    * @returns
    */
   update = (index, propName) => (e) => {
+    console.log(propName);
+
+    const changedRows = this.state.changedRows;
+
+    if (propName === "colName") changedRows[index].name = true;
+    else if (propName === "dataType") changedRows[index].dataType = true;
+
+    this.setState({
+      changedRows: changedRows,
+    });
+
     //https://stackoverflow.com/a/49502115
     const columnDefinitions = this.props.values.columnDefinitions;
     const item = { ...columnDefinitions[index] };
     item[propName] = e.target.value;
     columnDefinitions[index] = item;
-
     this.props.updateStateValue("columnDefinitions", columnDefinitions);
   };
 
@@ -112,6 +136,13 @@ class CleanData extends Component {
    * @returns
    */
   update1 = (index, propName) => (e) => {
+    const changedRows = this.state.changedRows;
+    console.log(changedRows);
+    changedRows[index].visible = true;
+    this.setState({
+      changedRows: changedRows,
+    });
+
     const columnDefinitions = this.props.values.columnDefinitions;
     const item = { ...columnDefinitions[index] };
     item[propName] = e.target.checked;
@@ -128,41 +159,34 @@ class CleanData extends Component {
     const columnDefinitions = this.props.values.columnDefinitions;
 
     return (
-      <Container>
-        <Row>
-          <Col>Column Name</Col>
-          <Col sm={1}>Display</Col>
-          {/* <Col sm={1}>Allow Blank</Col> */}
-          <Col>Data Type</Col>
-        </Row>
-        {columnDefinitions.map((item, index) => (
-          <Row key={index}>
-            <InputGroup className="mb-1" key={index}>
-              <Col>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Column Name</th>
+            <th sm={1}>Display</th>
+            {/* <Col sm={1}>Allow Blank</Col> */}
+            <th>Data Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {columnDefinitions.map((item, index) => (
+            <tr key={index}>
+              <td>
                 <FormControl
                   as="input"
                   value={item["colName"]}
                   onChange={this.update(index, "colName")}
                 />
-              </Col>
-              <Col sm={1}>
+              </td>
+              <td>
                 <InputGroup.Prepend>
                   <InputGroup.Checkbox
                     checked={item["required"]}
                     onChange={this.update1(index, "required")}
                   />
                 </InputGroup.Prepend>
-              </Col>
-              {/* <Col sm={1}>
-                <InputGroup.Prepend>
-                  <InputGroup.Checkbox
-                    checked={item["allowBlank"]}
-                    onChange={this.update1(index, "allowBlank")}
-                  />
-                </InputGroup.Prepend>
-              </Col> */}
-
-              <Col>
+              </td>
+              <td>
                 <FormControl
                   as="select"
                   custom
@@ -173,11 +197,11 @@ class CleanData extends Component {
                   <option value="numeric">numeric</option>
                   <option value="date">date</option>
                 </FormControl>
-              </Col>
-            </InputGroup>
-          </Row>
-        ))}
-      </Container>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     );
   };
 

@@ -16,8 +16,9 @@ import ExportModal from "./ExportModal";
 // DONE add column filtering
 // DONE add column ordering
 // DONE Add options dialogue for export grid data
-// TODO Add support for data appropriate filtering of columns
+// DONE Add support for data appropriate filtering of columns
 // TODO Investigate dynamic sizing of grid
+// DONE Add clear sort function
 // DONE Customise filter context menu to remove options for inserting / removing columns
 
 class ViewData extends Component {
@@ -33,7 +34,7 @@ class ViewData extends Component {
     this.visualiserShow = this.visualiserShow.bind(this);
     this.visualiserClose = this.visualiserClose.bind(this);
 
-    this.afterFilter = this.afterFilter.bind(this);
+    //this.afterFilter = this.afterFilter.bind(this);
   }
 
   state = {
@@ -66,6 +67,8 @@ class ViewData extends Component {
     });
 
     this.props.updateStateValue("columnDefinitions", colDefs);
+
+    this.props.addHistory("Dataset refined", "");
 
     //get all the displayed data on the grid
     this.props.updateStateValue(
@@ -112,13 +115,6 @@ class ViewData extends Component {
 
   colHeaders = () => {
     return this.props.values.colHeadersView;
-
-    // const colDefs = this.props.values.columnDefinitions;
-    // return colDefs
-    //   .filter((col) => col.required === true)
-    //   .map((col) => {
-    //     return col.colName;
-    //   });
   };
 
   // https://handsontable.com/docs/9.0.0/demo-filtering.html
@@ -224,22 +220,82 @@ class ViewData extends Component {
    */
   componentDidMount() {
     const hti = this.hotTableComponent.current.hotInstance;
+    /*
+      in the current version of 9.0.0. event notifications for common grid 
+      events required by the history component of graphvis-tabular.js don’t work; 
+      this issue is tracked in the Handsontable GitHub page:
+      https://github.com/handsontable/handsontable/issues/7567
+
+      So, we are using an older version 7.4.2 
+    */
     hti.addHook("afterColumnMove", this.afterColumnMove);
     hti.addHook("afterFilter", this.afterFilter);
     hti.addHook("afterRowMove", this.afterRowMove);
   }
 
-  afterRowMove = () => {
-    console.log("afterRowMove");
+  /**
+   * https://handsontable.com/docs/9.0.0/Hooks.html#event:afterRowMove
+   *
+   * @param {*} movedRows Array of visual row indexes to be moved.
+   * @param {*} finalIndex a start index for the moved columns
+   * @param {*} dropIndex  drop index for the moved rows, based on the indexes BEFORE the move
+   * @param {*} movePossible possible to move rows to the desired position?
+   * @param {*} orderChanged order of columns was changed by move?
+   */
+  afterRowMove = (
+    movedRows,
+    finalIndex,
+    dropIndex,
+    movePossible,
+    orderChanged
+  ) => {
+    if (orderChanged) {
+      console.log("afterRowMove");
+
+      this.props.addHistory(
+        "Moved rows",
+        "rows " +
+          //added the one as it's a zero based index
+          movedRows.map((r) => r + 1).join(", ") +
+          " to row index" +
+          (dropIndex + 1)
+      );
+    }
   };
 
+  /**
+   * Fired after column filter called
+   * @param {*} e An object array of the operations carried out, which
+   * which takes the form
+   * [
+   *  {
+   *    column: <columnIndex>,
+   *    conditions:[
+   *      {
+   *        name: <operation description>
+   *        args: array of values used
+   *      }
+   *    ],
+   *    operation: "conjunction"
+   *  }
+   *  ...
+   * ]
+   */
   afterFilter = (e) => {
-    /*
-      for some unknown reason uncommenting the next line will cause
-      the drop down filters to not work
-    */
-    //this.setState({ gridIsFiltered: true });
     console.log("afterFilter");
+
+    e.forEach((item, index) => {
+      console.log(item);
+      //item.column = 0 based index of column
+
+      item.conditions.forEach((condition, index) => {
+        //condition.name = "empty","not_empty", "eq" (equals), "neq" (not equals),"begins_with", "ends_with","contains", "not_contains"        //condition.name = "by_value" - items selected to be displayed
+
+        console.log(condition);
+      });
+
+      console.log(item.conditions);
+    });
   };
 
   updategridIsFiltered = (pFiltered) => {
@@ -262,27 +318,34 @@ class ViewData extends Component {
     movePossible,
     orderChanged
   ) => {
-    console.log("AFTERCOLUMNMOVE");
-    // if (orderChanged) {
-    //   var columnDefinitions = this.props.values.columnDefinitions;
-    //   //console.log("columnDefinitions", columnDefinitions);
-    //   var removed = columnDefinitions.splice(
-    //     movedColumns[0],
-    //     movedColumns.length
-    //   );
-    //   columnDefinitions.splice(dropIndex - movedColumns.length, 0, ...removed);
-    //   this.props.updateStateValue("columnDefinitions", columnDefinitions);
-    //   console.log("columnDefinitions", columnDefinitions);
-    // }
+    if (orderChanged) {
+      this.props.addHistory(
+        "Moved columns",
+        "columns " +
+          //added the one as it's a zero based index
+          movedColumns.map((r) => r + 1).join(", ") +
+          " to column index " +
+          (dropIndex + 1)
+      );
+    }
+  };
+
+  /**
+   * Remove all sort operations
+   */
+  clearSort = () => {
+    const ht = this.hotTableComponent;
+    ht.current.hotInstance.getPlugin("ColumnSorting").clearSort();
+    this.props.addHistory("Grid clear", "all sorts removed");
   };
 
   /**
    * Remove all column filters
    */
-  clearFilers = () => {
+  clearFilters = () => {
     const ht = this.hotTableComponent;
     ht.current.hotInstance.getPlugin("filters").clearConditions();
-    this.UpdateStateValue("gridIsFiltered", false);
+    this.props.addHistory("Grid clear", "all column filters removed removed");
   };
 
   //#region open close modals
@@ -339,8 +402,11 @@ class ViewData extends Component {
               <Button variant="secondary" onClick={this.downloadShow}>
                 Export to file
               </Button>
-              <Button variant="secondary" onClick={this.clearFilers}>
+              <Button variant="secondary" onClick={this.clearFilters}>
                 Clear Filters
+              </Button>
+              <Button variant="secondary" onClick={this.clearSort}>
+                Clear Sort
               </Button>
             </ButtonGroup>
           </FormGroup>

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
-import DockLayout from "rc-dock";
-import "rc-dock/dist/rc-dock.css";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -39,49 +37,7 @@ class Main extends Component {
 
     isPaneOpenLeft: false,
 
-    screenTitles: ["Select Data", "Clean Data", "View Data"],
-
-    layoutData: {
-      dockbox: {
-        mode: "horizontal",
-        children: [
-          {
-            mode: "vertical",
-            children: [
-              {
-                panelLock: { panelStyle: "main" },
-              },
-            ],
-          },
-        ],
-      },
-      floatbox: {
-        mode: "float",
-        children: [
-          {
-            tabs: [
-              {
-                id: "float",
-                title: "Transform history",
-                content: <div>History here</div>,
-                group: "allowWindow",
-              },
-            ],
-            x: 0,
-            y: 0,
-            w: 200,
-            h: 300,
-          },
-        ],
-      },
-    },
-    groups: {
-      allowWindow: {
-        floatable: true,
-        //newWindow: true,
-        minimizable: true,
-      },
-    },
+    history: [],
   };
 
   /**
@@ -103,11 +59,6 @@ class Main extends Component {
       step: step + 1,
     });
   };
-  gotoStep = (newStep) => {
-    this.setState({
-      step: newStep,
-    });
-  };
 
   //Handle fields change
   handleChange = (input) => (e) => {
@@ -120,6 +71,12 @@ class Main extends Component {
     this.setState({
       step: step - 1,
     });
+  };
+
+  addHistory = (action, description) => {
+    const history = this.state.history;
+    history.push({ action: action, descriptio: description });
+    console.log(history);
   };
 
   getPage = () => {
@@ -136,6 +93,7 @@ class Main extends Component {
       dataToClean,
       visualise,
       TestLinks,
+      History,
     } = this.state;
 
     const values = {
@@ -150,6 +108,7 @@ class Main extends Component {
       dataToClean,
       visualise,
       TestLinks,
+      History,
     };
 
     // eslint-disable-next-line default-case
@@ -161,6 +120,7 @@ class Main extends Component {
             handleChange={this.handleChange}
             values={values}
             updateStateValue={this.UpdateStateValue}
+            addHistory={this.addHistory}
           />
         );
 
@@ -172,6 +132,7 @@ class Main extends Component {
             handleChange={this.handleChange}
             values={values}
             updateStateValue={this.UpdateStateValue}
+            addHistory={this.addHistory}
           />
         );
 
@@ -182,6 +143,7 @@ class Main extends Component {
             handleChange={this.handleChange}
             values={values}
             updateStateValue={this.UpdateStateValue}
+            addHistory={this.addHistory}
           />
         );
     }
@@ -192,22 +154,7 @@ class Main extends Component {
 
   //figure out what step we're on and display the relevant page
   render() {
-    return (
-      <div>
-        <DockLayout
-          defaultLayout={this.state.layoutData}
-          groups={this.state.groups}
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 10,
-            right: 10,
-            bottom: 10,
-          }}
-        />
-        {this.getPage()}
-      </div>
-    );
+    return <div>{this.getPage()}</div>;
   }
 }
 
