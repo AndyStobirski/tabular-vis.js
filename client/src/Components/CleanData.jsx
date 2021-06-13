@@ -89,7 +89,7 @@ class CleanData extends Component {
       return { name: false, visible: false, dataType: false };
     });
 
-    console.log(data);
+    //console.log(data);
     this.setState({
       changedRows: data,
     });

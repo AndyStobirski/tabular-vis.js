@@ -87,6 +87,8 @@ class Main extends Component {
 
     var item = { action: action, description: description };
 
+    console.log(item);
+
     //history.push({ action: action, description: description });
     //https://stackoverflow.com/a/26254086/500181
     this.setState({ history: [...history, item] });

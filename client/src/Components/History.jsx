@@ -43,7 +43,7 @@ class History extends Component {
     //   )
     // );
 
-    console.log(this.props.history);
+    //console.log(this.props.history);
     return (
       <ProSidebar
         collapsed={this.props.collapsed}
