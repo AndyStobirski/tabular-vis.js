@@ -116,7 +116,10 @@ class SelectData extends Component {
       <React.Fragment>
         <Form>
           <FormGroup>
-            <NavBar Title={"Select Data Source"} />
+            <NavBar
+              Title={"Select Data Source"}
+              toggleHistory={this.props.toggleHistory}
+            />
           </FormGroup>
         </Form>
         <Form onSubmit={this.handleSubmit}>

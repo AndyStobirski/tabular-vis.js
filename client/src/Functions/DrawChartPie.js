@@ -1,8 +1,6 @@
 import * as d3 from "d3";
 import ChartBuildBody from "./ChartBuildBody";
 
-// TODO Implement pie chart
-
 //V1 functionality
 //if a row has been selected: show two slices for column 1 and not column 1 value
 //if a col has been selected: show two slices for row 1 and not row one

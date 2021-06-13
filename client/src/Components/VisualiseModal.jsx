@@ -112,14 +112,12 @@ class VisualiseModal extends Component {
   };
 
   visualiserSelected = (e) => {
-    console.log("plopsis", e);
     this.setState({ selectedGraph: e });
   };
 
   DrawChart = () => {
     const graphData = this.state.graphData.values;
     const width = this.getContainerWidth();
-
     DrawChart(graphData, width, this.state.selectedGraph);
   };
 

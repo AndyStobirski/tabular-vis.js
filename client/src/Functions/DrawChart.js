@@ -5,8 +5,12 @@ import DrawChartPie from "./DrawChartPie";
 import * as d3 from "d3";
 import ChartDimensions from "./ChartDimensions";
 
+//TODO implement pie chart
+//TODO Implement box chart
+//TODO Implement point plit
+
 /**
- * Base funcion for drawiung charts
+ * Base funcion for drawing charts
  *
  * @param {*} data An array of objects {name: "", value:""}
  * @param {*} width The width of the element the chart is to be drawn in
@@ -14,7 +18,6 @@ import ChartDimensions from "./ChartDimensions";
  */
 const DrawChart = function (data, width, chartType) {
   const dimensions = ChartDimensions(width);
-
   const selector = "#container";
 
   //clear the container of any contents

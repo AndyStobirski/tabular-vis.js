@@ -18,6 +18,7 @@ import ExportModal from "./ExportModal";
 // DONE Add options dialogue for export grid data
 // DONE Add support for data appropriate filtering of columns
 // TODO Investigate dynamic sizing of grid
+// FIXME Clear filters button appears not to work
 // DONE Add clear sort function
 // DONE Customise filter context menu to remove options for inserting / removing columns
 
@@ -68,7 +69,13 @@ class ViewData extends Component {
 
     this.props.updateStateValue("columnDefinitions", colDefs);
 
-    this.props.addHistory("Dataset refined", "");
+    const rowsBefore = this.props.values.dataToView.length;
+    const rowsAfter = this.visibleGridData().length;
+
+    this.props.addHistory(
+      "Dataset refined",
+      rowsAfter < rowsBefore ? rowsBefore - rowsAfter + " rows removed" : ""
+    );
 
     //get all the displayed data on the grid
     this.props.updateStateValue(
@@ -92,10 +99,10 @@ class ViewData extends Component {
       licenseKey: "non-commercial-and-evaluation",
       data: this.props.values.dataToView,
       colHeaders: this.colHeaders(),
-      colWidths: this.colWidths(),
+      //colWidths: this.colWidths(),
       columns: this.columns(),
       rowHeaders: true,
-      readOnly: false,
+      readOnly: true,
       manualColumnMove: true,
       manualRowMove: true,
       manualColumnResize: true,
@@ -109,7 +116,8 @@ class ViewData extends Component {
       ],
       columnSorting: true,
       contextMenu: this.contextMenus(),
-      autoWrapRow: true,
+      //autoWrapRow: true,
+      //rowHeights: "24px",
     };
   };
 
@@ -229,6 +237,7 @@ class ViewData extends Component {
       So, we are using an older version 7.4.2 
     */
     hti.addHook("afterColumnMove", this.afterColumnMove);
+    hti.addHook("beforeFilter", this.beforeFilter);
     hti.addHook("afterFilter", this.afterFilter);
     hti.addHook("afterRowMove", this.afterRowMove);
   }
@@ -264,6 +273,17 @@ class ViewData extends Component {
   };
 
   /**
+   *
+   * @param {*} e
+   */
+  beforeFilter = (e) => {
+    this.props.addHistory(
+      "Before filter action",
+      this.props.values.dataToView.length + " rows present"
+    );
+  };
+
+  /**
    * Fired after column filter called
    * @param {*} e An object array of the operations carried out, which
    * which takes the form
@@ -283,19 +303,131 @@ class ViewData extends Component {
    */
   afterFilter = (e) => {
     console.log("afterFilter");
+    var filterDescription = "";
+    var args;
 
+    //each item represents a filter operation
     e.forEach((item, index) => {
-      console.log(item);
       //item.column = 0 based index of column
 
       item.conditions.forEach((condition, index) => {
-        //condition.name = "empty","not_empty", "eq" (equals), "neq" (not equals),"begins_with", "ends_with","contains", "not_contains"        //condition.name = "by_value" - items selected to be displayed
+        args = condition.args.join(", ");
 
-        console.log(condition);
+        //  See here:
+        //  https://handsontable.com/docs/9.0.0/Filters.html
+        //
+
+        //condition.name contains the filter type applied
+        //filter types available are "filter by condition", "filter by value"
+        //  "filter by value" is identified by the condition.name ==="by_value"
+        //  "filter by condition" is identified by
+        //      "empty","not_empty", "eq" (equals), "neq" (not equals),
+        //      <string only>
+        //      "begins_with", "ends_with","contains", "not_contains"
+        //      <number based>
+        //      "gt" greater than, "gte" greater than or equal to, "lt","lte"
+        //      "between", "not_between"
+
+        //condition.args contains the values provided.
+        //in the case of "filter by value" it contains the values remaining
+        //in the case of "filter by condition" it contains the arguments use
+
+        if (condition.name === "by_value") {
+          //values have been selected or removed
+          //item.args contains an array of remain values
+
+          this.props.addHistory(
+            "Filter on values for column " + (item.column + 1),
+            'selected values: "' + condition.args.join('","') + '"'
+          );
+        } else {
+          //filtering by condition, args are dependant upon the data
+          //type of the column, but some are in common to all
+          switch (condition.name) {
+            //args common to all
+            case "empty":
+              filterDescription = "show empty cells";
+              break;
+
+            case "not_empty":
+              filterDescription = "show not empty cells";
+              break;
+
+            case "eq": //equals
+              filterDescription = 'show cells whose text equals "' + args + '"';
+              break;
+
+            case "neq": //not equals
+              filterDescription =
+                'show cells whose text does not equal "' + args + '"';
+              break;
+
+            //args for number only
+            case "gt": //greather than
+              filterDescription =
+                "show cells with a value greater than " + args;
+              break;
+
+            case "gte": //greather than or equal
+              filterDescription =
+                "show cells with a value greater than or equal to " + args;
+              break;
+
+            case "lt": //less than
+              filterDescription = "show cells with a value less than " + args;
+              break;
+
+            case "lte": //less than
+              filterDescription =
+                "show cells with a value less than or equal to " + args;
+              break;
+
+            case "between":
+              filterDescription = "show cells with values between " + args;
+              break;
+
+            case "not_between":
+              filterDescription = "show cells with values not between " + args;
+              break;
+
+            //args for string only
+            case "begins_with":
+              filterDescription =
+                'show cells whose text begins with "' + args + '"';
+              break;
+
+            case "ends_with":
+              filterDescription =
+                'show cells whose text ends with "' + args + '"';
+              break;
+
+            case "contains":
+              filterDescription =
+                'show cells whose text contains "' + args + '"';
+              break;
+
+            case "not_contains":
+              filterDescription =
+                'show cells whose text does not contain "' + args + '"';
+              break;
+
+            default:
+              //none
+              break;
+          }
+
+          this.props.addHistory(
+            "Filter on column " + (item.column + 1),
+            filterDescription
+          );
+        }
       });
-
-      console.log(item.conditions);
     });
+
+    this.props.addHistory(
+      "After filter action",
+      this.visibleGridData().length + " rows present"
+    );
   };
 
   updategridIsFiltered = (pFiltered) => {
@@ -336,7 +468,7 @@ class ViewData extends Component {
   clearSort = () => {
     const ht = this.hotTableComponent;
     ht.current.hotInstance.getPlugin("ColumnSorting").clearSort();
-    this.props.addHistory("Grid clear", "all sorts removed");
+    this.props.addHistory("Grid clear", "all column sorts removed");
   };
 
   /**
@@ -392,6 +524,7 @@ class ViewData extends Component {
               PrevStep={this.prevStep}
               RefineStep={this.refineStep}
               Title={"View Data Source"}
+              toggleHistory={this.props.toggleHistory}
             />
           </FormGroup>
         </Form>

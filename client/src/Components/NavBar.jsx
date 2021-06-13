@@ -9,10 +9,13 @@ class NavBavr extends Component {
     const nextStep = this.props.NextStep;
     const prevStep = this.props.PrevStep;
     const refineStep = this.props.RefineStep;
+    const toggleHistory = this.props.toggleHistory;
+
     return (
       <Navbar bg="primary" expand="sm" variant="dark">
         <Navbar.Brand>{title}</Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
+        <Button onClick={toggleHistory}>Toggle History</Button>
         {prevStep != null && (
           <Button variant="primary" onClick={prevStep}>
             Previous

@@ -4,9 +4,6 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import ConversionUtilities from "../Functions/ConversionUtilities";
 import Table from "react-bootstrap/Table";
 
@@ -45,7 +42,7 @@ class CleanData extends Component {
 
     this.state.changedRows.forEach((change, index) => {
       var currentCol = columnDefinitions[index];
-      console.log(currentCol);
+      //console.log(currentCol);
 
       if (change.name) {
         this.props.addHistory(
@@ -215,6 +212,7 @@ class CleanData extends Component {
               NextStep={this.buildDataSet}
               PrevStep={this.prevStep}
               Title={"Clean Data Source"}
+              toggleHistory={this.props.toggleHistory}
             />
           </FormGroup>
         </Form>

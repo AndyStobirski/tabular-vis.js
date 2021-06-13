@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
+import History from "./History";
+import Table from "react-bootstrap/Table";
+import Navbar from "react-bootstrap/Navbar";
+import Button from "react-bootstrap/Button";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -38,6 +42,10 @@ class Main extends Component {
     isPaneOpenLeft: false,
 
     history: [],
+
+    collapsed: true,
+
+    titles: ["Select Data Source", "Clean Data", "View Data"],
   };
 
   /**
@@ -75,8 +83,43 @@ class Main extends Component {
 
   addHistory = (action, description) => {
     const history = this.state.history;
-    history.push({ action: action, descriptio: description });
-    console.log(history);
+    history.push({ action: action, description: description });
+    //this.setState({ history: history });
+  };
+
+  toggleHistory = () => {
+    console.log("Toggle history");
+    const collapsed = this.state.collapsed;
+    this.setState({ collapsed: !collapsed });
+  };
+
+  navBarTitle = () => {
+    return this.state.titles[this.state.step - 1];
+  };
+
+  navbarButtons = () => {
+    // eslint-disable-next-line default-case
+    switch (this.state.step) {
+      case 2: //clean data
+        return (
+          <React.Fragment>
+            <Button variant="primary" onClick={this.prevStep}>
+              Previous
+            </Button>
+            <Button variant="primary" onClick={this.nextStep}>
+              Next
+            </Button>
+          </React.Fragment>
+        );
+      case 3: //view data
+        return (
+          <React.Fragment>
+            <Button variant="primary" onClick={this.prevStep}>
+              Previous
+            </Button>
+          </React.Fragment>
+        );
+    }
   };
 
   getPage = () => {
@@ -121,6 +164,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
+            toggleHistory={this.toggleHistory}
           />
         );
 
@@ -133,6 +177,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
+            toggleHistory={this.toggleHistory}
           />
         );
 
@@ -144,6 +189,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
+            toggleHistory={this.toggleHistory}
           />
         );
     }
@@ -154,7 +200,30 @@ class Main extends Component {
 
   //figure out what step we're on and display the relevant page
   render() {
-    return <div>{this.getPage()}</div>;
+    return (
+      <Table>
+        <tbody>
+          <tr>
+            <td>
+              <History
+                collapsed={this.state.collapsed}
+                history={this.state.history}
+              />
+            </td>
+
+            <td>
+              {/* <Navbar bg="primary" expand="sm" variant="dark">
+                <Navbar.Brand>{this.navBarTitle()}</Navbar.Brand>
+                <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
+                <Button onClick={this.toggleHistory}>Toggle History</Button>
+                {this.navbarButtons()}
+              </Navbar> */}
+              {this.getPage()}
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+    );
   }
 }
 
