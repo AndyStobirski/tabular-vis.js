@@ -116,8 +116,9 @@ class ViewData extends Component {
       ],
       columnSorting: true,
       contextMenu: this.contextMenus(),
-      //autoWrapRow: true,
-      //rowHeights: "24px",
+      autoWrapRow: true,
+      rowHeights: "24px",
+      autoRowSize: true,
     };
   };
 

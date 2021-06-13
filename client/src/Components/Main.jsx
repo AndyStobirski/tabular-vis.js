@@ -24,6 +24,7 @@ class Main extends Component {
       "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
       "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
       "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
+      "https://en.wikipedia.org/wiki/74th_Illinois_General_Assembly",
     ],
 
     HeaderPresent: true,
@@ -83,8 +84,12 @@ class Main extends Component {
 
   addHistory = (action, description) => {
     const history = this.state.history;
-    history.push({ action: action, description: description });
-    //this.setState({ history: history });
+
+    var item = { action: action, description: description };
+
+    //history.push({ action: action, description: description });
+    //https://stackoverflow.com/a/26254086/500181
+    this.setState({ history: [...history, item] });
   };
 
   toggleHistory = () => {
