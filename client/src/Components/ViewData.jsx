@@ -152,6 +152,7 @@ class ViewData extends Component {
    */
   contextMenus = () => {
     const visualiserShow = this.visualiserShow;
+    const addHistory = this.props.addHistory;
 
     return {
       items: {
@@ -161,6 +162,7 @@ class ViewData extends Component {
           callback: function (key, selection, clickEvent) {
             const start = selection[0].start;
             this.selectRows(start.row, start.row);
+            addHistory("Visualisation", "selected row " + (start.row + 1));
             visualiserShow();
           },
         },
@@ -170,6 +172,7 @@ class ViewData extends Component {
           callback: function (key, selection, clickEvent) {
             const start = selection[0].start;
             this.selectColumns(start.col, start.col);
+            addHistory("Visualisation", "selected column " + (start.col + 1));
             visualiserShow();
           },
         },
@@ -260,7 +263,7 @@ class ViewData extends Component {
       "rows " +
         //added the one as it's a zero based index
         movedRows.map((r) => r + 1).join(", ") +
-        " to row index" +
+        " to row index " +
         (finalIndex + 1)
     );
   };
@@ -271,7 +274,7 @@ class ViewData extends Component {
    * @param {*} destinationSortConfigs  Destination sort configuration
    */
   afterColumnSort = (currentSortConfig, destinationSortConfigs) => {
-    //console.log(currentSortConfig, destinationSortConfigs);
+    console.log(currentSortConfig, destinationSortConfigs);
   };
 
   /**
@@ -491,8 +494,6 @@ class ViewData extends Component {
   //#endregion
 
   render() {
-    //console.log(this.data());
-
     return (
       <React.Fragment>
         {this.state.showVisualiser && (
