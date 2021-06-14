@@ -38,7 +38,7 @@ class CleanData extends Component {
     );
     //console.log(retVal);
 
-    //console.log(this.state.changedRows);
+    console.log(this.state.changedRows);
 
     this.state.changedRows.forEach((change, index) => {
       var currentCol = columnDefinitions[index];
@@ -54,7 +54,7 @@ class CleanData extends Component {
       if (change.visible) {
         this.props.addHistory(
           "Column visibility change",
-          "changed column " + (index + 1) + " to " + currentCol.visible
+          "changed column " + (index + 1) + " to " + currentCol.required
         );
       }
 
@@ -134,7 +134,6 @@ class CleanData extends Component {
    */
   update1 = (index, propName) => (e) => {
     const changedRows = this.state.changedRows;
-    console.log(changedRows);
     changedRows[index].visible = true;
     this.setState({
       changedRows: changedRows,

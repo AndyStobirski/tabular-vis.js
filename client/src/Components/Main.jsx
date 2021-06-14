@@ -3,9 +3,10 @@ import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
 import History from "./History";
-import Table from "react-bootstrap/Table";
-import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -86,12 +87,14 @@ class Main extends Component {
     const history = this.state.history;
 
     var item = { action: action, description: description };
-
     console.log(item);
-
     //history.push({ action: action, description: description });
     //https://stackoverflow.com/a/26254086/500181
     this.setState({ history: [...history, item] });
+  };
+
+  clearHistory = () => {
+    this.setState({ history: [] });
   };
 
   toggleHistory = () => {
@@ -206,30 +209,26 @@ class Main extends Component {
   //https://ticlo.github.io/rc-dock/examples/#basic
 
   //figure out what step we're on and display the relevant page
+
   render() {
     return (
-      <Table>
-        <tbody>
-          <tr>
-            <td>
+      <Container>
+        <Row>
+          {/* <Collapse in={this.state.collapsed}> */}
+          {!this.state.collapsed && (
+            <Col sm={3}>
               <History
                 collapsed={this.state.collapsed}
                 history={this.state.history}
+                clearHistory={this.clearHistory}
               />
-            </td>
+            </Col>
+          )}
+          {/* </Collapse> */}
 
-            <td>
-              {/* <Navbar bg="primary" expand="sm" variant="dark">
-                <Navbar.Brand>{this.navBarTitle()}</Navbar.Brand>
-                <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
-                <Button onClick={this.toggleHistory}>Toggle History</Button>
-                {this.navbarButtons()}
-              </Navbar> */}
-              {this.getPage()}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
+          <Col sm={this.state.collapsed ? 12 : 9}>{this.getPage()}</Col>
+        </Row>
+      </Container>
     );
   }
 }

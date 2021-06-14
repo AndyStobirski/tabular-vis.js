@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Navbar from "react-bootstrap/Navbar";
+import {
+  BiFilterAlt,
+  BiRightArrowAlt,
+  BiArrowBack,
+  BiHistory,
+} from "react-icons/bi";
 
 class NavBavr extends Component {
   state = {};
@@ -15,20 +21,25 @@ class NavBavr extends Component {
       <Navbar bg="primary" expand="sm" variant="dark">
         <Navbar.Brand>{title}</Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
-        <Button onClick={toggleHistory}>Toggle History</Button>
+        <Button onClick={toggleHistory}>
+          <BiHistory />
+          Toggle History
+        </Button>
         {prevStep != null && (
           <Button variant="primary" onClick={prevStep}>
+            <BiArrowBack />
             Previous
           </Button>
         )}{" "}
         {nextStep != null && (
           <Button variant="primary" onClick={nextStep}>
+            <BiRightArrowAlt />
             Next
           </Button>
         )}
         {refineStep != null && (
           <Button variant="primary" onClick={refineStep}>
-            Refine
+            <BiFilterAlt /> Refine
           </Button>
         )}
       </Navbar>

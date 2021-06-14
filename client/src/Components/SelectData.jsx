@@ -60,7 +60,7 @@ class SelectData extends Component {
    * @param {*} e
    */
   tableButtonClicked = (e) => {
-    this.props.addHistory("Selected table", e + 1);
+    this.props.addHistory("Selected table", Number(e) + 1);
 
     const { dataArray } = this.props.values;
     const data = dataArray[e];
