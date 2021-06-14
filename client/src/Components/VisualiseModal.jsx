@@ -3,8 +3,10 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import * as d3 from "d3";
-
 import DrawChart from "../Functions/DrawChart";
+
+// TODO investigate data visualisations, https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
+
 /**
  * VisualiseModal
  *    this.props:
@@ -12,10 +14,7 @@ import DrawChart from "../Functions/DrawChart";
  *      close - function to close modal
  *      columnDefs - array of objects defining columns: their names and datatypes
  *      gridData - all the data on the grid
- *      selectedCells - selected cells on the grid, an array of arrays consistsing of row, column, row2, column2
- *
- *
- *
+ *      selectedData - selected cells on the grid, an array of arrays consistsing of row, column, row2, column2
  */
 class VisualiseModal extends Component {
   state = {

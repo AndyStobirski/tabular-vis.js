@@ -20,7 +20,6 @@ const ConversionUtilities = {
     //build the column definitions by examining the first row
     var colDef = [];
     var col = {};
-    var colIdx = 1;
     for (const key in pTableData[0]) {
       col = {
         colName: key,
@@ -33,8 +32,6 @@ const ConversionUtilities = {
       };
 
       colDef.push(col);
-
-      colIdx++;
     }
 
     //convert object array into array of arrays
