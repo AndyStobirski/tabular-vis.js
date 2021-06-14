@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
 import ConversionUtilities from "../Functions/ConversionUtilities";
 import Table from "react-bootstrap/Table";
+import HistoryUtilties from "../Functions/HistoryUtilties";
 
 // DONE add auto detection of data types
 // TODO add utilities to clean data such as distinct, remove rows with blank values or rows with bad data
@@ -21,6 +22,7 @@ class CleanData extends Component {
   //when exiting the page
   state = {
     changedRows: [],
+    historyItems: [],
   };
 
   /**
@@ -40,35 +42,44 @@ class CleanData extends Component {
 
     console.log(this.state.changedRows);
 
+    var historyItems = [];
+
     this.state.changedRows.forEach((change, index) => {
       var currentCol = columnDefinitions[index];
       //console.log(currentCol);
 
       if (change.name) {
-        this.props.addHistory(
-          "Column name change",
-          "changed column " + (index + 1) + " to " + currentCol.colName
+        historyItems.push(
+          HistoryUtilties.MakeHistoryItem(
+            "Column name",
+            "changed column " + (index + 1) + " to " + currentCol.colName
+          )
         );
       }
 
       if (change.visible) {
-        this.props.addHistory(
-          "Column visibility change",
-          "changed column " + (index + 1) + " to " + currentCol.required
+        historyItems.push(
+          HistoryUtilties.MakeHistoryItem(
+            "Column visibility",
+            "changed column " + (index + 1) + " to " + currentCol.required
+          )
         );
       }
 
       if (change.dataType) {
-        this.props.addHistory(
-          "Column datatype change",
-          "changed column " + (index + 1) + " to " + currentCol.dataType
+        historyItems.push(
+          HistoryUtilties.MakeHistoryItem(
+            "Column datatype",
+            "changed column " + (index + 1) + " to " + currentCol.dataType
+          )
         );
       }
 
       //console.log(change, index);
     });
 
-    //this.props.addHistory
+    console.log(historyItems);
+    this.props.addHistory(null, null, historyItems);
 
     this.props.updateStateValue("colHeadersView", retVal.colHeadersView);
 

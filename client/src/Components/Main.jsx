@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import HistoryUtilties from "../Functions/HistoryUtilties";
 
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
@@ -83,14 +84,27 @@ class Main extends Component {
     });
   };
 
-  addHistory = (action, description) => {
+  /**
+   * Add an item or items to the history.
+   *
+   * The properties action and description are used together
+   * OR itemArray which is an collecton history items. The latter
+   * is used in ViewData to add many items in one go as calling this function
+   * repetitively in a short time only seems to add the last item.
+   * Something to do with the asynchronous nature of this.setState,
+   * I think.
+   *
+   * @param {*} action
+   * @param {*} description
+   * @param {*} itemArray
+   */
+  addHistory = (action, description, itemArray) => {
     const history = this.state.history;
 
-    var item = { action: action, description: description };
-    console.log(item);
-    //history.push({ action: action, description: description });
-    //https://stackoverflow.com/a/26254086/500181
-    this.setState({ history: [...history, item] });
+    if (itemArray === undefined) {
+      var item = HistoryUtilties.MakeHistoryItem(action, description);
+      this.setState({ history: [...history, item] });
+    } else this.setState({ history: [...history, ...itemArray] });
   };
 
   clearHistory = () => {
