@@ -10,19 +10,20 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import ConversionUtilities from "../Functions/ConversionUtilities";
 import Alert from "react-bootstrap/Alert";
+import { parse } from "papaparse";
 
 // TODO Clean up load HTML tables dialogue
-// TODO Add drag and drop functionality for CSV files
+// DONE Add drag and drop functionality for CSV files
+// TODO clean up data loading and standardise between the two functions
 // TODO Add modal loading screen for URL load
 // DONE decouple table processing logic to new function
 
 class SelectData extends Component {
   state = {
-    response: "",
-    post: "",
-    tablesFound: 0,
+    DataSource: null,
     TablesReturned: null,
     DataLoaded: false,
+    UploadType: "",
   };
 
   nextStep = (e) => {
@@ -33,7 +34,7 @@ class SelectData extends Component {
    * Call TableToJSON, a Node.js application
    * @param {*} e
    */
-  handleSubmit = async (e) => {
+  loadURL = async (e) => {
     e.preventDefault();
 
     this.props.addHistory("Loaded page", this.props.values.InputData);
@@ -45,14 +46,49 @@ class SelectData extends Component {
       },
       body: JSON.stringify({ post: this.props.values.InputData }),
     });
+
     const body = await response.text();
+    this.setLoadedData(this.props.values.InputData, "URL", JSON.parse(body));
+  };
 
-    //a response of JSON.parse(body).length == 0
-    //indicates the page contains no tables
+  /**
+   * Upload the received file
+   * @param {*} e PapaParse Event
+   */
+  uploadCSV = (e) => {
+    console.log(e);
+    e.preventDefault();
 
+    this.props.addHistory("Loaded CSV file", this.props.values.InputData);
+
+    const file = e.dataTransfer.files;
+    console.log(e);
+
+    Array.from(file)
+      //s.filter((file) => file.type === "text/csv")
+      .forEach(async (file) => {
+        const text = await file.text();
+        const result = parse(text, { header: true });
+        console.log(result);
+
+        if (result.errors.length === 0) {
+          this.setLoadedData("FILE", "CSV", [result.data]);
+        } else {
+          console.log("No");
+        }
+      });
+  };
+
+  /**
+   *
+   * @param {*} pType
+   * @param {*} pData
+   */
+  setLoadedData = (pSource, pType, pData) => {
+    this.setState({ DataSource: pSource });
+    this.setState({ UploadType: pType });
     this.setState({ DataLoaded: true });
-
-    this.props.updateStateValue("dataArray", JSON.parse(body));
+    this.props.updateStateValue("dataArray", pData);
   };
 
   /**
@@ -81,16 +117,20 @@ class SelectData extends Component {
    * @returns
    */
   parseTables = () => {
+    var successLabel =
+      this.state.DataSource === "URL"
+        ? this.props.values.dataArray.length +
+          " at " +
+          this.props.values.InputData
+        : "CSV file uploaded";
+
     if (this.state.DataLoaded || this.props.values.dataArray) {
       if (this.props.values.dataArray === null) {
         return <Alert variant="warning">No tables found</Alert>;
       } else {
         return (
           <div>
-            <Alert variant="info">
-              {this.props.values.dataArray.length} tables found at{" "}
-              {this.props.values.InputData}
-            </Alert>
+            <Alert variant="info">{successLabel}</Alert>
             <ListGroup onSelect={this.tableButtonClicked}>
               {this.props.values.dataArray.map((option, index) => (
                 <ListGroup.Item eventKey={index} key={index}>
@@ -106,7 +146,7 @@ class SelectData extends Component {
   };
 
   predefinedDataSources = (e) => {
-    console.log(this.props.values.TestLinks[e]);
+    //console.log(this.props.values.TestLinks[e]);
     this.props.updateStateValue("InputData", this.props.values.TestLinks[e]);
   };
 
@@ -122,7 +162,7 @@ class SelectData extends Component {
             />
           </FormGroup>
         </Form>
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.loadURL}>
           <InputGroup className="mb-4">
             <DropdownButton
               as={InputGroup.Prepend}
@@ -141,7 +181,6 @@ class SelectData extends Component {
             </DropdownButton>
             <FormControl
               placeholder="URL to load"
-              aria-describedby="basic-addon2"
               value={values.InputData}
               onChange={handleChange("InputData")}
             />
@@ -154,19 +193,12 @@ class SelectData extends Component {
         </Form>
         <InputGroup className="mb-3">
           <FormControl
-            placeholder="Local file to load"
-            aria-describedby="basic-addon2"
+            placeholder="CSV file to load"
+            onDrop={(e) => this.uploadCSV(e)}
+            onDragEnter={(e) => {}}
+            onDragLeave={(e) => {}}
+            onDragOver={(e) => {}}
           />
-          <DropdownButton
-            as={InputGroup.Append}
-            variant="outline-secondary"
-            title="Load File"
-            id="input-group-dropdown-2"
-            onSelect={this.loadFile}
-          >
-            <Dropdown.Item eventKey="1">Webpage</Dropdown.Item>
-            <Dropdown.Item eventKey="2">CSV</Dropdown.Item>
-          </DropdownButton>
         </InputGroup>
 
         <FormGroup>{this.parseTables()}</FormGroup>
