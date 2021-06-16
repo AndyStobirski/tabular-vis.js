@@ -17,6 +17,7 @@ import ChartDimensions from "./ChartDimensions";
  * @param {*} chartType Type of chart to be drawn
  */
 const DrawChart = function (data, width, chartType) {
+  //console.log("DrawChart");
   const dimensions = ChartDimensions(width);
   const selector = "#container";
 
@@ -29,6 +30,7 @@ const DrawChart = function (data, width, chartType) {
       DrawChartLine(data, selector, dimensions);
       break;
 
+    case null:
     case "bar":
       DrawChartBar(data, selector, dimensions);
       break;

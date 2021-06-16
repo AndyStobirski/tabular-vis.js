@@ -1,15 +1,3 @@
-import React, { Component } from "react";
-import NavBar from "./NavBar";
-import { HotTable } from "@handsontable/react";
-import "handsontable/dist/handsontable.full.css";
-import Form from "react-bootstrap/Form";
-import FormGroup from "react-bootstrap/FormGroup";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
-import VisualiseModal from "./VisualiseModal";
-import ExportModal from "./ExportModal";
-import Handsontable from "handsontable";
-
 // DONE Add context menu support - https://handsontable.com/docs/8.4.0/frameworks-wrapper-for-react-custom-context-menu-example.html
 // DONE Add Selected data support
 // DONE add row dragging
@@ -22,6 +10,21 @@ import Handsontable from "handsontable";
 // FIXME Clear filters button appears not to work
 // DONE Add clear sort function
 // DONE Customise filter context menu to remove options for inserting / removing columns
+// TODO Add warning of data loss on back navigate
+// FIXME Loading a visualisation for will reset the dataset, removing order
+
+import React, { Component } from "react";
+import NavBar from "./NavBar";
+import { HotTable } from "@handsontable/react";
+import "handsontable/dist/handsontable.full.css";
+import Form from "react-bootstrap/Form";
+import FormGroup from "react-bootstrap/FormGroup";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+import VisualiseModal from "./VisualiseModal";
+import ExportModal from "./ExportModal";
+import Handsontable from "handsontable";
+import VisualisationData from "../Functions/VisualisationData";
 
 class ViewData extends Component {
   constructor(props, context) {
@@ -95,13 +98,13 @@ class ViewData extends Component {
   //#region Grid configuration
   hotSettings = () => {
     //console.log(this.columns());
-    //console.log("HotSettings");
+    console.log("HotSettings");
     return {
       licenseKey: "non-commercial-and-evaluation",
       data: this.props.values.dataToView,
       //data: Handsontable.helper.createSpreadsheetData(1000, 1000),
       colHeaders: this.colHeaders(),
-      //colWidths: this.colWidths(),
+      // colWidths: this.colWidths(),
       columns: this.columns(),
       rowHeaders: true,
       readOnly: true,
@@ -148,7 +151,9 @@ class ViewData extends Component {
   };
 
   /**
-   * Right clicking on a cell will launch two visualisation options: row and col
+   * Right clicking on a cell will launch a context menu that
+   * contains two visualisation options: row and col, which causes
+   * the Visualiser Modal to launch.
    */
   contextMenus = () => {
     const visualiserShow = this.visualiserShow;
@@ -160,20 +165,32 @@ class ViewData extends Component {
           // Own custom option
           name: "Row...",
           callback: function (key, selection, clickEvent) {
-            const start = selection[0].start;
-            this.selectRows(start.row, start.row);
-            addHistory("Visualisation", "selected row " + (start.row + 1));
-            visualiserShow();
+            const selectRows = this.selectRows;
+            //Note the use of the time out
+            setTimeout(function () {
+              const start = selection[0].start;
+              selectRows(start.row, start.row);
+              addHistory("Visualisation", "selected row " + (start.row + 1));
+
+              visualiserShow();
+            }, 300);
           },
         },
         Columns: {
           // Own custom option
           name: "Column...",
           callback: function (key, selection, clickEvent) {
-            const start = selection[0].start;
-            this.selectColumns(start.col, start.col);
-            addHistory("Visualisation", "selected column " + (start.col + 1));
-            visualiserShow();
+            const selectColumns = this.selectColumns;
+            //Note the use of the time out, which is used to fix an issue
+            //described in this webpage for HandsOnTable
+            //https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/9
+            setTimeout(function () {
+              const start = selection[0].start;
+              selectColumns(start.col, start.col);
+              addHistory("Visualisation", "selected column " + (start.col + 1));
+
+              visualiserShow();
+            }, 300);
           },
         },
       },
@@ -190,7 +207,12 @@ class ViewData extends Component {
     //Any failure will immediately short-circuit and return undefined.
 
     //On initial page load, current will be null
-    return this.hotTableComponent.current?.hotInstance.getData();
+    const data = this.hotTableComponent.current.hotInstance.getData();
+    var copy = data.map(function (arr) {
+      return arr.slice();
+    });
+
+    return copy;
   };
 
   /**
@@ -500,9 +522,15 @@ class ViewData extends Component {
           <VisualiseModal
             show={this.state.showVisualiser}
             close={this.visualiserClose}
-            columnDefs={this.props.values.columnDefinitions}
-            gridData={this.visibleGridData()}
-            selectionData={this.getSelectedCells()}
+            description={this.getSelectedCells().description()}
+            // columnDefs={this.props.values.columnDefinitions}
+            // gridData={this.visibleGridData()}
+            // selectionData={this.getSelectedCells()}
+            data={VisualisationData.MakeData(
+              this.getSelectedCells(),
+              this.props.values.columnDefinitions,
+              this.visibleGridData()
+            )}
           />
         )}
         <ExportModal

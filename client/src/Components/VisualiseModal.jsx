@@ -22,9 +22,7 @@ class VisualiseModal extends Component {
     selectedGraph: null,
   };
 
-  componentDidMount() {
-    this.graphData();
-  }
+  componentDidMount() {}
 
   /**
    * Build graph data used by D3 to display
@@ -66,14 +64,13 @@ class VisualiseModal extends Component {
    * cell of the structure selected.
    */
   setButtons = () => {
-    console.log(this.state.graphData.dataType);
-
+    console.log("setButtons");
     if (this.state.selectedGraph === null) {
       console.log("Default chart");
       this.visualiserSelected("bar");
     }
 
-    if (this.state.graphData.dataType === "numeric") {
+    if (this.props.data.dataType === "numeric") {
       return (
         <div>
           <Button variant="secondary" value="bar">
@@ -115,7 +112,8 @@ class VisualiseModal extends Component {
   };
 
   DrawChart = () => {
-    const graphData = this.state.graphData.values;
+    console.log("DrawChart");
+    const graphData = this.props.data.values;
     const width = this.getContainerWidth();
     DrawChart(graphData, width, this.state.selectedGraph);
   };
@@ -130,15 +128,13 @@ class VisualiseModal extends Component {
     return element.getBoundingClientRect().width;
   };
 
-  drawGraph = () => {};
-
   render() {
     //this method is to block the rendering of the page until the
     //variable this.state.graphData is rendered
     //https://stackoverflow.com/a/35023545
-    if (!this.state.graphData) {
-      return <div />;
-    }
+    // if (!this.state.graphData) {
+    //   return <div />;
+    // }
 
     const styles = {
       container: {
@@ -157,12 +153,14 @@ class VisualiseModal extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Data visualisation of {this.props.selectionData.description()}
+            Data visualisation of {this.props.description}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ButtonGroup
-            onClick={(e) => this.visualiserSelected(e.target.value)}
+            onClick={(e) => {
+              this.visualiserSelected(e.target.value);
+            }}
             size="sm"
           >
             {this.setButtons()}
