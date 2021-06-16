@@ -1,3 +1,9 @@
+// TODO Clean up load HTML tables dialogue
+// DONE Add drag and drop functionality for CSV files
+// TODO clean up data loading and standardise between the two functions
+// TODO Add modal loading screen for data load
+// DONE decouple table processing logic to new function
+
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -12,18 +18,25 @@ import ConversionUtilities from "../Functions/ConversionUtilities";
 import Alert from "react-bootstrap/Alert";
 import { parse } from "papaparse";
 
-// TODO Clean up load HTML tables dialogue
-// DONE Add drag and drop functionality for CSV files
-// TODO clean up data loading and standardise between the two functions
-// TODO Add modal loading screen for URL load
-// DONE decouple table processing logic to new function
-
+/**
+ * SelectData - first page of the application.
+ *
+ * The user loads either a URL containing HTML Tables or
+ * a CSV file that is dragged and dropped onto to the form.
+ *
+ * If the provided data contains tabular data the user is
+ * presented with a list of those tables and the option
+ * to select one and move onto the next step.
+ *
+ */
 class SelectData extends Component {
   state = {
     DataSource: null,
     TablesReturned: null,
     DataLoaded: false,
     UploadType: "",
+    LoadErrors: null,
+    draggedOver: false,
   };
 
   nextStep = (e) => {
@@ -37,18 +50,26 @@ class SelectData extends Component {
   loadURL = async (e) => {
     e.preventDefault();
 
-    this.props.addHistory("Loaded page", this.props.values.InputData);
+    try {
+      this.props.addHistory("Loaded page", this.props.values.InputData);
+      this.setLoadedInfoData(this.props.values.InputData, "CSV");
 
-    const response = await fetch("/api/LoadTable", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ post: this.props.values.InputData }),
-    });
+      const response = await fetch("/api/LoadTable", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ post: this.props.values.InputData }),
+      });
 
-    const body = await response.text();
-    this.setLoadedData(this.props.values.InputData, "URL", JSON.parse(body));
+      const body = await response.text();
+
+      console.log(JSON.parse(body).Data);
+
+      this.setLoadedData(JSON.parse(body).Data);
+    } catch (exception) {
+      console.log("exception", exception);
+    }
   };
 
   /**
@@ -56,39 +77,74 @@ class SelectData extends Component {
    * @param {*} e PapaParse Event
    */
   uploadCSV = (e) => {
-    console.log(e);
     e.preventDefault();
+    const addHistory = this.props.addHistory;
+    const setLoadedData = this.setLoadedData;
+    const setErrorData = this.setErrorData;
+    const setLoadedInfoData = this.setLoadedInfoData;
 
-    this.props.addHistory("Loaded CSV file", this.props.values.InputData);
+    setErrorData(null);
 
-    const file = e.dataTransfer.files;
-    console.log(e);
+    Array.from(e.dataTransfer.files).forEach(async (file) => {
+      //console.log(file.name);
+      const text = await file.text();
 
-    Array.from(file)
-      //s.filter((file) => file.type === "text/csv")
-      .forEach(async (file) => {
-        const text = await file.text();
-        const result = parse(text, { header: true });
-        console.log(result);
+      parse(text, {
+        header: true,
+        dynamicTyping: true,
+        complete: function (results) {
+          addHistory("Loaded CSV file", file.name);
+          setLoadedInfoData(file.name, "CSV");
+          if (results.errors.length === 0) {
+            setLoadedData([results.data]);
+          } else {
+            const errors = results.errors
+              .map((err) => {
+                return (
+                  "Code: " +
+                  err.code +
+                  ", Message: " +
+                  err.message +
+                  ", Row: " +
+                  err.row
+                );
+              })
+              .join("\r\n");
 
-        if (result.errors.length === 0) {
-          this.setLoadedData("FILE", "CSV", [result.data]);
-        } else {
-          console.log("No");
-        }
+            addHistory("Error loading CSV", errors);
+            setErrorData(errors);
+          }
+        },
       });
+    });
   };
 
   /**
    *
-   * @param {*} pType
+   * @param {*} pError
+   */
+  setErrorData = (pError) => {
+    this.setState({ LoadErrors: pError });
+  };
+
+  /**
+   *
    * @param {*} pData
    */
-  setLoadedData = (pSource, pType, pData) => {
+  setLoadedData = (pData) => {
+    this.setState({ DataLoaded: true });
+    this.setState({ LoadErrors: null });
+    this.props.updateStateValue("dataArray", pData);
+  };
+
+  /**
+   *
+   * @param {*} pSource
+   * @param {*} pType
+   */
+  setLoadedInfoData = (pSource, pType) => {
     this.setState({ DataSource: pSource });
     this.setState({ UploadType: pType });
-    this.setState({ DataLoaded: true });
-    this.props.updateStateValue("dataArray", pData);
   };
 
   /**
@@ -117,31 +173,36 @@ class SelectData extends Component {
    * @returns
    */
   parseTables = () => {
-    var successLabel =
-      this.state.DataSource === "URL"
-        ? this.props.values.dataArray.length +
-          " at " +
-          this.props.values.InputData
-        : "CSV file uploaded";
-
-    if (this.state.DataLoaded || this.props.values.dataArray) {
-      if (this.props.values.dataArray === null) {
-        return <Alert variant="warning">No tables found</Alert>;
-      } else {
-        return (
-          <div>
-            <Alert variant="info">{successLabel}</Alert>
-            <ListGroup onSelect={this.tableButtonClicked}>
-              {this.props.values.dataArray.map((option, index) => (
-                <ListGroup.Item eventKey={index} key={index}>
-                  Table {index + 1}({this.props.values.dataArray[index].length}{" "}
-                  Rows)
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </div>
-        );
-      }
+    if (this.state.LoadErrors) {
+      console.log(this.state.LoadErrors);
+      return (
+        <Alert variant="danger">
+          <Alert.Heading>
+            Errors encountered loading {this.state.DataSource}{" "}
+            {this.state.UploadType}
+          </Alert.Heading>
+          <p>{this.state.LoadErrors}</p>
+        </Alert>
+      );
+    } else if (this.props.values.dataArray) {
+      return (
+        <div>
+          <Alert variant="info">
+            Loaded from {this.state.UploadType}
+            {": "} {this.state.DataSource}{" "}
+          </Alert>
+          <ListGroup onSelect={this.tableButtonClicked}>
+            {this.props.values.dataArray.map((option, index) => (
+              <ListGroup.Item eventKey={index} key={index}>
+                Table {index + 1}({this.props.values.dataArray[index].length}{" "}
+                Rows)
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </div>
+      );
+    } else if (this.state.DataLoaded) {
+      return <Alert variant="warning">No tables found</Alert>;
     }
   };
 
@@ -162,6 +223,8 @@ class SelectData extends Component {
             />
           </FormGroup>
         </Form>
+
+        {/* */}
         <Form onSubmit={this.loadURL}>
           <InputGroup className="mb-4">
             <DropdownButton
@@ -191,15 +254,29 @@ class SelectData extends Component {
             </InputGroup.Append>
           </InputGroup>
         </Form>
+        {/* */}
         <InputGroup className="mb-3">
           <FormControl
             placeholder="CSV file to load"
-            onDrop={(e) => this.uploadCSV(e)}
-            onDragEnter={(e) => {}}
-            onDragLeave={(e) => {}}
-            onDragOver={(e) => {}}
+            onDrop={(e) => {
+              this.setState({ draggedOver: false });
+              this.uploadCSV(e);
+            }}
+            onDragEnter={(e) => {
+              this.setState({ draggedOver: true });
+            }}
+            onDragLeave={(e) => this.setState({ draggedOver: false })}
+            onDragOver={(e) => {
+              e.preventDefault();
+            }}
+            className={`p-6 my-2 mx-auto max-w-md border-2 ${
+              this.state.draggedOver
+                ? "border-green-600 bg-green-100"
+                : "border-gray-600"
+            }`}
           />
         </InputGroup>
+        {/* */}
 
         <FormGroup>{this.parseTables()}</FormGroup>
       </React.Fragment>

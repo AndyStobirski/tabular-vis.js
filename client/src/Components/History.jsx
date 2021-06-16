@@ -39,7 +39,7 @@ class History extends Component {
         </Navbar>
         <Form.Group style={{ fontSize: 13 }}>
           {this.getHistory().map((historyItem, index) => {
-            return <Form.Label>{historyItem}</Form.Label>;
+            return <Form.Label key={index}>{historyItem}</Form.Label>;
           })}
         </Form.Group>
       </Form>

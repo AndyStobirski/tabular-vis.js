@@ -1,3 +1,5 @@
+// TODO Fix exception handling
+
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -14,11 +16,27 @@ app.get("/api/hello", (req, res) => {
 app.post("/api/LoadTable", (req, res) => {
   console.log(req.body.post);
 
-  const tabletojson = require("tabletojson").Tabletojson;
+  const retVal = {
+    Message: null,
+    Data: null,
+  };
 
-  tabletojson.convertUrl(req.body.post, function (tablesAsJson) {
-    res.send(tablesAsJson);
-  });
+  try {
+    const tabletojson = require("tabletojson").Tabletojson;
+
+    tabletojson.convertUrl(req.body.post, function (tablesAsJson) {
+      //console.log(tablesAsJson);
+      //res.send(tablesAsJson);
+
+      retVal.Data = tablesAsJson;
+      retVal.Message = "data";
+      res.send(retVal);
+    });
+  } catch (e) {
+    retVal.Data = e;
+    retVal.Message = "exception";
+    res.send(retVal);
+  }
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
