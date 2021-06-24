@@ -170,7 +170,7 @@ class ViewData extends Component {
             setTimeout(function () {
               const start = selection[0].start;
               selectRows(start.row, start.row);
-              addHistory("Visualisation", "selected row " + (start.row + 1));
+              //addHistory("Visualisation", "selected row " + (start.row + 1));
 
               visualiserShow();
             }, 300);
@@ -187,7 +187,7 @@ class ViewData extends Component {
             setTimeout(function () {
               const start = selection[0].start;
               selectColumns(start.col, start.col);
-              addHistory("Visualisation", "selected column " + (start.col + 1));
+              //addHistory("Visualisation", "selected column " + (start.col + 1));
 
               visualiserShow();
             }, 300);

@@ -1,56 +1,68 @@
 import * as d3 from "d3";
 import ChartBuildBody from "./ChartBuildBody";
+import Lookups from "./GetData";
+import ConversionUtilities from "./ConversionUtilities";
 
 //V1 functionality
-//if a row has been selected: show two slices for column 1 and not column 1 value
-//if a col has been selected: show two slices for row 1 and not row one
+// numeric only
+// if a row has been selected: show two slices for column 1 and not column 1 value
+// if a col has been selected: show two slices for row 1 and not row one
+// numeric values are show as a % of the sum of values
 
+//v2 fucntionality
+// TODO Clean up code
 const DrawChartPie = function (data, selector, dimensions) {
   var svg = ChartBuildBody(selector, dimensions);
   var radius =
     Math.min(dimensions.internalWidth(), dimensions.internalHeight()) / 2 -
     dimensions.margins.top;
 
-  console.log(radius);
-  var colour = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
+  var colors = Lookups.Colours();
 
-  var pie = d3.pie().value(function (d) {
-    return d.value;
-  });
-  var data_ready = pie(Object.entries(data));
-  console.log(data_ready);
+  // var chart = svg
+  //   .append("g")
+  //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  //   .attr("width", width)
+  //   .attr("height", height);
 
-  // shape helper to build arcs:
-  var arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
+  // convert data to pie Data
 
-  // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-  svg
-    .selectAll("mySlices")
-    .data(data_ready)
+  data = ConversionUtilities.makePieData(data);
+
+  // end convert
+
+  var pie = d3.pie().value((d) => d.value);
+
+  var color_scale = d3
+    .scaleOrdinal()
+    .domain(data.map((d) => d.name))
+    .range(colors);
+
+  let arc = d3.arc().outerRadius(radius).innerRadius(50);
+
+  var p_chart = svg
+    .selectAll("pie")
+    .data(pie(data))
     .enter()
+    .append("g")
+    .attr("transform", "translate(170,230)");
+
+  p_chart
     .append("path")
-    .attr("d", arcGenerator)
-    .attr("fill", function (d) {
-      return colour(d.data.key);
-    })
-    .attr("stroke", "black")
-    .style("stroke-width", "2px")
-    .style("opacity", 0.7);
+    .attr("d", arc)
+    .attr("fill", (d) => {
+      return color_scale(d.data.name);
+    });
 
-  // Now add the annotation. Use the centroid method to get the best coordinates
-  svg
-    .selectAll("mySlices")
-    .data(data_ready)
-    .enter()
+  p_chart
     .append("text")
     .text(function (d) {
-      return "grp " + d.data.key;
+      return d.data.name;
     })
     .attr("transform", function (d) {
-      return "translate(" + arcGenerator.centroid(d) + ")";
+      return "translate(" + arc.centroid(d) + ")";
     })
-    .style("text-anchor", "middle")
-    .style("font-size", 17);
+    .style("text-anchor", "middle");
 };
 
 export default DrawChartPie;

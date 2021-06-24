@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 const ConversionUtilities = {
   /**
    * Attempt to convert the provided object to a number
@@ -93,6 +95,28 @@ const ConversionUtilities = {
     };
 
     return retVal;
+  },
+
+  //data consists of an array object { name: "", value: "" }
+  //TODO Clean up
+  makePieData: function (data) {
+    //convert to numbers
+    data.forEach(
+      (r) => (r.value = ConversionUtilities.convertToNumber(r.value))
+    );
+
+    //remove none numbers
+    data = data.filter((f) => f.value !== null);
+
+    //calculate percentages
+    const total = d3.sum(
+      data.map((c) => {
+        return c.value;
+      })
+    );
+    data.forEach((c) => (c.value = (c.value / total) * 100));
+
+    return data;
   },
 };
 

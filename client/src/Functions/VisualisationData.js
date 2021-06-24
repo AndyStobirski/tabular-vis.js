@@ -27,6 +27,7 @@ const VisualisationData = {
       values: values,
     };
 
+    console.log(JSON.stringify(graphData));
     return graphData;
   },
 };

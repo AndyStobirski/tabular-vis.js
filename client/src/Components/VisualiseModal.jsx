@@ -22,42 +22,13 @@ class VisualiseModal extends Component {
     selectedGraph: null,
   };
 
-  componentDidMount() {}
-
-  /**
-   * Build graph data used by D3 to display
-   */
-  graphData = () => {
-    const values = [];
-
-    const iAm = this.props.selectionData;
-    const columnDefs = this.props.columnDefs;
-    const gridData = this.props.gridData;
-
-    if (iAm.structure === "Row") {
-      for (var ctr = 0; ctr < columnDefs.length; ctr++) {
-        values.push({
-          name: columnDefs[ctr],
-          value: gridData[iAm.value][ctr],
-        });
-      }
-    } else {
-      gridData.map((row) => {
-        values.push({
-          name: row[0],
-          value: row[iAm.value],
-        });
-        return null;
-      });
-    }
-
-    var graphData = {
-      dataType: iAm.dataType,
-      values: values,
-    };
-
-    this.setState({ graphData: graphData });
-  };
+  componentDidMount() {
+    //The presence of this code produces an error
+    //    index.js:1 Warning: Cannot update during an existing state transition
+    //    (such as within `render`). Render methods should be a pure function of
+    //    props and state.
+    //this.props.addHistory("Loaded visualiser", this.props.description);
+  }
 
   /**
    * The buttons available are dependant upon the data type of the first
@@ -112,7 +83,7 @@ class VisualiseModal extends Component {
   };
 
   DrawChart = () => {
-    console.log("DrawChart");
+    //console.log("DrawChart");
     const graphData = this.props.data.values;
     const width = this.getContainerWidth();
     DrawChart(graphData, width, this.state.selectedGraph);
