@@ -7,15 +7,15 @@ import ChartBuildBody from "./ChartBuildBody";
 //text on x axis
 //https://www.d3-graph-gallery.com/graph/lollipop_basic.html
 
-const DrawChartWord = function (data, selector, dimensions) {
+const DrawPointPlotHorizontal = function (data, selector, dimensions) {
   //need a bigger left border for the labels
   dimensions.margins.left = 100;
   var svg = ChartBuildBody(selector, dimensions);
 
-  console.log(data);
+  //console.log(data);
   //an array of arrays [[key, [,]]]
   var d3Groups = d3.groups(data, (v) => v.value);
-  console.log(d3Groups);
+  //console.log(d3Groups);
   // //sort from big to little
   // data = data.sort(function (b, a) {
   //   return a[1].length - b[1].length;
@@ -86,4 +86,4 @@ const DrawChartWord = function (data, selector, dimensions) {
     .attr("stroke", "black");
 };
 
-export default DrawChartWord;
+export default DrawPointPlotHorizontal;

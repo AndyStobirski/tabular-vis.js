@@ -14,7 +14,7 @@ app.get("/api/hello", (req, res) => {
 });
 
 app.post("/api/LoadTable", (req, res) => {
-  console.log(req.body.post);
+  //console.log(req.body.post);
 
   const retVal = {
     Message: null,

@@ -40,7 +40,7 @@ class CleanData extends Component {
     );
     //console.log(retVal);
 
-    console.log(this.state.changedRows);
+    //console.log(this.state.changedRows);
 
     var historyItems = [];
 
@@ -78,7 +78,7 @@ class CleanData extends Component {
       //console.log(change, index);
     });
 
-    console.log(historyItems);
+    //console.log(historyItems);
     this.props.addHistory(null, null, historyItems);
 
     this.props.updateStateValue("colHeadersView", retVal.colHeadersView);
@@ -118,7 +118,7 @@ class CleanData extends Component {
    * @returns
    */
   update = (index, propName) => (e) => {
-    console.log(propName);
+    //console.log(propName);
 
     const changedRows = this.state.changedRows;
 

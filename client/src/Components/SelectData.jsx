@@ -64,11 +64,11 @@ class SelectData extends Component {
 
       const body = await response.text();
 
-      console.log(JSON.parse(body).Data);
+      //console.log(JSON.parse(body).Data);
 
       this.setLoadedData(JSON.parse(body).Data);
     } catch (exception) {
-      console.log("exception", exception);
+      //console.log("exception", exception);
     }
   };
 
@@ -174,7 +174,7 @@ class SelectData extends Component {
    */
   parseTables = () => {
     if (this.state.LoadErrors) {
-      console.log(this.state.LoadErrors);
+      //console.log(this.state.LoadErrors);
       return (
         <Alert variant="danger">
           <Alert.Heading>

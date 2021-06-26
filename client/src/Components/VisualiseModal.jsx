@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import * as d3 from "d3";
-import DrawChart from "../Functions/DrawChart";
+import DrawChart from "../Functions/Charts/DrawChart";
 
 // TODO investigate data visualisations, https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
 
@@ -35,9 +35,9 @@ class VisualiseModal extends Component {
    * cell of the structure selected.
    */
   setButtons = () => {
-    console.log("setButtons");
+    //console.log("setButtons");
     if (this.state.selectedGraph === null) {
-      console.log("Default chart");
+      //console.log("Default chart");
       this.visualiserSelected("bar");
     }
 

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import ChartBuildBody from "./ChartBuildBody";
-import Lookups from "./GetData";
-import ConversionUtilities from "./ConversionUtilities";
+import Lookups from "../GetData";
+import ConversionUtilities from "../ConversionUtilities";
 
 //V1 functionality
 // numeric only
@@ -11,7 +11,9 @@ import ConversionUtilities from "./ConversionUtilities";
 
 //v2 fucntionality
 // TODO Clean up code
+// TODO Add percentile values
 const DrawChartPie = function (data, selector, dimensions) {
+  //console.log("DrawChartPie", data);
   var svg = ChartBuildBody(selector, dimensions);
   var radius =
     Math.min(dimensions.internalWidth(), dimensions.internalHeight()) / 2 -
@@ -19,16 +21,9 @@ const DrawChartPie = function (data, selector, dimensions) {
 
   var colors = Lookups.Colours();
 
-  // var chart = svg
-  //   .append("g")
-  //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-  //   .attr("width", width)
-  //   .attr("height", height);
-
   // convert data to pie Data
-
   data = ConversionUtilities.makePieData(data);
-
+  //console.log(data);
   // end convert
 
   var pie = d3.pie().value((d) => d.value);

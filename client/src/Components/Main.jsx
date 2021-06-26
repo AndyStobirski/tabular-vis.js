@@ -19,8 +19,7 @@ class Main extends Component {
     DataType: "csv",
 
     //can be data or a URL
-    InputData:
-      "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
+    InputData: "https://en.wikipedia.org/wiki/74th_Illinois_General_Assembly",
 
     TestLinks: [
       "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
@@ -112,7 +111,7 @@ class Main extends Component {
   };
 
   toggleHistory = () => {
-    console.log("Toggle history");
+    //console.log("Toggle history");
     const collapsed = this.state.collapsed;
     this.setState({ collapsed: !collapsed });
   };
