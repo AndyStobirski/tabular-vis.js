@@ -11,22 +11,30 @@ const VisualisationData = {
    * @returns Object array of [{name:"",value:""}]
    */
   MakeData: function (iAm, columnDefs, gridData) {
-    const values = [];
+    let values = [];
+    let cell = null;
 
     if (iAm.structure === "Row") {
+      var row = gridData[iAm.value];
+
       for (var ctr = 0; ctr < columnDefs.length; ctr++) {
-        values.push({
-          name: columnDefs[ctr],
-          value: gridData[iAm.value][ctr],
-        });
+        cell = {
+          name: columnDefs[ctr].colName,
+          value: row[ctr],
+        };
+
+        if (columnDefs[ctr].dataType === "numeric" && cell.value === null)
+          cell.value = 0;
       }
     } else {
-      gridData.map((row) => {
-        values.push({
+      var colIsNumeric = columnDefs[iAm.value].dataType === "numeric";
+
+      //Column selected
+      values = gridData.map((row) => {
+        return {
           name: row[0],
-          value: row[iAm.value],
-        });
-        return null;
+          value: colIsNumeric && row[iAm.value] === null ? 0 : row[iAm.value],
+        };
       });
     }
 

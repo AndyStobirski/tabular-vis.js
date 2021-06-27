@@ -64,7 +64,12 @@ class SelectData extends Component {
 
       const body = await response.text();
 
-      //console.log(JSON.parse(body).Data);
+      console.log(JSON.parse(body).Data);
+
+      this.props.addHistory(
+        "tables loaded ",
+        JSON.parse(body).Data.length.toString()
+      );
 
       this.setLoadedData(JSON.parse(body).Data);
     } catch (exception) {
@@ -97,6 +102,7 @@ class SelectData extends Component {
           setLoadedInfoData(file.name, "CSV");
           if (results.errors.length === 0) {
             setLoadedData([results.data]);
+            this.props.addHistory("Tables loaded", "1 ");
           } else {
             const errors = results.errors
               .map((err) => {
@@ -152,7 +158,12 @@ class SelectData extends Component {
    * @param {*} e
    */
   tableButtonClicked = (e) => {
-    this.props.addHistory("Selected table", Number(e) + 1);
+    //If we don't add a white space to end, the join operation employed in "History.jsx"
+    //which uses "\r\n" sticks the next line to the end, ignoring the carriage return
+    this.props.addHistory(
+      "Selected table",
+      "number " + (Number(e) + 1).toString()
+    );
 
     const { dataArray } = this.props.values;
     const data = dataArray[e];
@@ -275,6 +286,9 @@ class SelectData extends Component {
                 : "border-gray-600"
             }`}
           />
+        </InputGroup>
+        <InputGroup className="mb-3">
+          <Button>Blank worksheet</Button>
         </InputGroup>
         {/* */}
 

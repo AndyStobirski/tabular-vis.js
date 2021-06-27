@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import ChartBuildBody from "./ChartBuildBody";
 import Lookups from "../GetData";
-import ConversionUtilities from "../ConversionUtilities";
 
 //V1 functionality
 // numeric only
@@ -20,11 +19,6 @@ const DrawChartPie = function (data, selector, dimensions) {
     dimensions.margins.top;
 
   var colors = Lookups.Colours();
-
-  // convert data to pie Data
-  data = ConversionUtilities.makePieData(data);
-  //console.log(data);
-  // end convert
 
   var pie = d3.pie().value((d) => d.value);
 

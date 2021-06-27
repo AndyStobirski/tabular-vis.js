@@ -107,7 +107,7 @@ const ConversionUtilities = {
   //TODO Clean up
   makePieData: function (data) {
     //console.log("MakepieData", data);
-    var grp = d3.group(data, (v) => v.value.toString());
+    var grp = d3.group(data, (v) => v.value);
     var pie = [];
     grp.forEach((g) => {
       pie.push({ name: g[0].value, value: g.length });
@@ -119,29 +119,17 @@ const ConversionUtilities = {
       { name: pie[0].name, value: pie[0].value },
       { name: "except " + pie[0].name, value: sum - pie[0].value },
     ];
-
-    // //convert to numbers
-    // data.forEach(
-    //   (r) => (r.value = ConversionUtilities.convertToNumber(r.value))
-    // );
-
-    // //remove none numbers
-    // data = data.filter((f) => f.value !== null);
-
-    // //calculate percentages
-    // const total = d3.sum(
-    //   data.map((c) => {
-    //     return c.value;
-    //   })
-    // );
-    // data.forEach((c) => (c.value = (c.value / total) * 100));
-
-    // return [
-    //   { name: data[0].name, value: data[0].value },
-    //   { name: "except " + data[0].name, value: 100 - data[0].value },
-    // ];
   },
 
+  // TODO Do this
+  groupTextData: function (data) {
+    var grp = d3.group(data, (v) => v.value);
+    var pie = [];
+    grp.forEach((g) => {
+      pie.push({ name: g[0].value, value: g.length });
+    });
+    return pie;
+  },
   makePieData1: function (data) {
     //convert to numbers
     data.forEach(

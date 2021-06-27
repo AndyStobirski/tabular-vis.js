@@ -19,13 +19,17 @@ class Main extends Component {
     DataType: "csv",
 
     //can be data or a URL
-    InputData: "https://en.wikipedia.org/wiki/74th_Illinois_General_Assembly",
+    InputData:
+      "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
 
     TestLinks: [
       "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
       "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
       "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
       "https://en.wikipedia.org/wiki/74th_Illinois_General_Assembly",
+      "https://en.wikipedia.org/wiki/Template:Known_and_suspected_companions_of_Earth",
+      "https://en.wikipedia.org/wiki/Temporary_satellite",
+      "https://en.wikipedia.org/wiki/Quasi-satellite",
     ],
 
     HeaderPresent: true,
@@ -229,7 +233,7 @@ class Main extends Component {
         <Row>
           {/* <Collapse in={this.state.collapsed}> */}
           {!this.state.collapsed && (
-            <Col sm={3}>
+            <Col sm={4}>
               <History
                 collapsed={this.state.collapsed}
                 history={this.state.history}
@@ -239,7 +243,7 @@ class Main extends Component {
           )}
           {/* </Collapse> */}
 
-          <Col sm={this.state.collapsed ? 12 : 9}>{this.getPage()}</Col>
+          <Col sm={this.state.collapsed ? 12 : 8}>{this.getPage()}</Col>
         </Row>
       </Container>
     );

@@ -3,13 +3,14 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import { BiCopy, BiTrash } from "react-icons/bi";
 import Button from "react-bootstrap/Button";
+import Toast from "react-bootstrap/Toast";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // DONE Implement copy to clipboard
 // DONE Implement text formatting of copy to clipboard
 
 class History extends Component {
-  state = {};
+  state = { showToast: false };
 
   /**
    * Output the history as a text array
@@ -17,31 +18,54 @@ class History extends Component {
    */
   getHistory = () => {
     const history = this.props.history;
+
     return history.map((historyItem, index) => {
       return historyItem.action + ": " + historyItem.description;
     });
   };
 
+  toggleToast = () => {
+    this.setState({ showToast: !this.state.showToast });
+  };
+
   render() {
     return (
       <Form style={{ wordBreak: "break-all" }}>
-        <Navbar bg="primary" expand="sm" variant="dark">
+        <Navbar expand="sm" bg="light">
           <Navbar.Brand>History</Navbar.Brand>
           <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
           <CopyToClipboard text={this.getHistory().join("\r\n")}>
-            <Button>
+            <Button variant="light" onClick={this.toggleToast}>
               <BiCopy />
             </Button>
           </CopyToClipboard>
-          <Button onClick={this.props.clearHistory}>
+          <Button onClick={this.props.clearHistory} variant="light">
             <BiTrash />
           </Button>
         </Navbar>
-        <Form.Group style={{ fontSize: 13 }}>
+        <Toast
+          bg="Info"
+          onClose={() => this.toggleToast()}
+          show={this.state.showToast}
+          delay={2000}
+          autohide
+        >
+          <Toast.Header>
+            <strong>History copied to clipboard</strong>
+          </Toast.Header>
+        </Toast>
+        {this.getHistory().map((historyItem, index) => {
+          return (
+            <p>
+              <small>{historyItem}</small>
+            </p>
+          );
+        })}
+        {/* <Form.Group style={{ fontSize: 12 }}>
           {this.getHistory().map((historyItem, index) => {
             return <Form.Label key={index}>{historyItem}</Form.Label>;
           })}
-        </Form.Group>
+        </Form.Group> */}
       </Form>
     );
   }

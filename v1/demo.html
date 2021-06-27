@@ -1,247 +1,786 @@
 <!doctype html>
-<html>
-<head>
-<meta charset='uft-8'/>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+	<html>
+		<head>
+			<meta charset='uft-8'/>
+			<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+			<style>
+				html{
+				background: #fff;
+				}
+				p{
+				text-align: center;
+				width: 80%;
+				margin: auto;
+				margin-bottom: 10px;
+				}
+				#vis_table{
+				width: 80%;
+				margin-bottom: 50px;
+				}
+				table,th,td{
+				margin: 0 auto;
+				text-align: center;
+				background: #f7f7f7;
+				}
+				tbody td:first-child{
+				font-weight: bold;
+				}
+				h1,h3,h4{
+				text-align: center;
+				}
+				h1{
+				margin-bottom: 50px;
+				}
+				#d2{
+				position: absolute;
+				top:700px;
+				}
+				table td{
+				border: 1px solid #c3c3c3;
+				}
+			</style>
+		</head>
+		<body>
+			<h1>Table_vis.js Demo Page</h1>
+			<h3>What is it
+			</h3>
+			<p> table_vis.js can generate a visualisation as soon as some data values are selected on a data table.</p>
+			<p>When users click any data values on the data table implemented table_vis.js, a button component consisting of ROW button and COL button display.</p>
+			<p>once the ROW button is clicked, table_vis.js will collect the data in the same row as the clicked data and draw the visualisation to compare them while the COL button is used to compare the column data.</p>
+			<p>The table implemented table_vis.js is expected to consist of &lt thead &gt and &lt tbody&gt.
+				The row in &lt thead&gt will be regarded as the row title while the 1st column in &lt tbody&gt will be considered as column title.
+				Developed for visualising tabular data on demand.
+				Developed for adapting the information overload as people always just concern about the special row or column in data tables.
+			</p>
+			<h3>How to install and use</h3>
+			<p>1.<code>npm install table_vis --save</code>
+			</p>
+			<p>
+				2.<code>import table_vis from 'table_vis'</code>
+				or
+				<code>let table_vis = require('table_vis');</code>
+			</p>
+			<p>
+				3.<code>table_vis.vis(table)</code>
+			</p>
+			<h3>What does it look like👇</h3>
+			<h4>Players Score Table</h4>
+			<table class='table'>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Round1</th>
+						<th>Round2</th>
+						<th>Round3</th>
+						<th>Round4</th>
+						<th>Round5</th>
+						<th>Round6</th>
+						<th>1/8 Final</th>
+						<th>1/4 Final</th>
+						<th>Semi Final</th>
+						<th>Semi Final</th>
+						<th>Country</th>
+						<th>Gender</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Andy</td>
+						<td>92</td>
+						<td>73</td>
+						<td>84</td>
+						<td>16</td>
+						<td>22</td>
+						<td>93</td>
+						<td>14</td>
+						<td>54</td>
+						<td>71</td>
+						<td>92</td>
+						<td>USA</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Judy</td>
+						<td>82</td>
+						<td>83</td>
+						<td>36</td>
+						<td>51</td>
+						<td>62.5</td>
+						<td>31</td>
+						<td>64</td>
+						<td>15</td>
+						<td>20</td>
+						<td>94</td>
+						<td>USA</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>John</td>
+						<td>59</td>
+						<td>13</td>
+						<td>4</td>
+						<td>5</td>
+						<td>2.5/1.22</td>
+						<td>24</td>
+						<td>14</td>
+						<td>20</td>
+						<td>22</td>
+						<td>13</td>
+						<td>UK</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Yarn</td>
+						<td>144</td>
+						<td>90</td>
+						<td>800</td>
+						<td>75</td>
+						<td>3/51</td>
+						<td>73</td>
+						<td>64</td>
+						<td>20</td>
+						<td>22</td>
+						<td>93</td>
+						<td>CHN</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Chen</td>
+						<td>72</td>
+						<td>13</td>
+						<td>84</td>
+						<td>85</td>
+						<td>21</td>
+						<td>43</td>
+						<td>64</td>
+						<td>14</td>
+						<td>22</td>
+						<td>13</td>
+						<td>CHN</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Jackyr</td>
+						<td>52</td>
+						<td>74</td>
+						<td>64</td>
+						<td>55</td>
+						<td>91</td>
+						<td>53</td>
+						<td>14</td>
+						<td>84</td>
+						<td>52</td>
+						<td>73</td>
+						<td>JAP</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Son2r</td>
+						<td>34</td>
+						<td>5/80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>KOR</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Long3</td>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Owen4a</td>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Nick2a</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Son1s</td>
+						<td>34</td>
+						<td>5/80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>KOR</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Long3a</td>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UGD</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>Owenq</td>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Nickd</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Nickd</td>
+						<td>81</td>
+						<td>50</td>
+						<td>24</td>
+						<td>15</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Nickdy</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>kkNickdt</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>16</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Long3a</td>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UGD</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>2Owenq</td>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>dNickd</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>Nidckd</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>hhNickdy</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>klcd</td>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+				</tbody>
+			</table>
+			<h1>New table</h1>
+			<table class='table'>
+				<thead>
+					<tr>
+						<th>Round1</th>
+						<th>Round2</th>
+						<th>Round3</th>
+						<th>Round4</th>
+						<th>Round5</th>
+						<th>Round6</th>
+						<th>1/8 Final</th>
+						<th>1/4 Final</th>
+						<th>Semi Final</th>
+						<th>Semi Final</th>
+						<th>Country</th>
+						<th>Gender</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						
+						<td>92</td>
+						<td>73</td>
+						<td>84</td>
+						<td>16</td>
+						<td>22</td>
+						<td>93</td>
+						<td>14</td>
+						<td>54</td>
+						<td>71</td>
+						<td>92</td>
+						<td>USA</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>82</td>
+						<td>83</td>
+						<td>36</td>
+						<td>51</td>
+						<td>62.5</td>
+						<td>31</td>
+						<td>64</td>
+						<td>15</td>
+						<td>20</td>
+						<td>94</td>
+						<td>USA</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>59</td>
+						<td>13</td>
+						<td>4</td>
+						<td>5</td>
+						<td>2.5/1.22</td>
+						<td>24</td>
+						<td>14</td>
+						<td>20</td>
+						<td>22</td>
+						<td>13</td>
+						<td>UK</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>144</td>
+						<td>90</td>
+						<td>800</td>
+						<td>75</td>
+						<td>3/51</td>
+						<td>73</td>
+						<td>64</td>
+						<td>20</td>
+						<td>22</td>
+						<td>93</td>
+						<td>CHN</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>72</td>
+						<td>13</td>
+						<td>84</td>
+						<td>85</td>
+						<td>21</td>
+						<td>43</td>
+						<td>64</td>
+						<td>14</td>
+						<td>22</td>
+						<td>13</td>
+						<td>CHN</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>52</td>
+						<td>74</td>
+						<td>64</td>
+						<td>55</td>
+						<td>91</td>
+						<td>53</td>
+						<td>14</td>
+						<td>84</td>
+						<td>52</td>
+						<td>73</td>
+						<td>JAP</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>34</td>
+						<td>5/80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>KOR</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
 
-  <style>
-  html{
-    background: #fff;
-  }
-  p{
-    text-align: center;
-    width: 80%;
-    margin: auto;
-    margin-bottom: 10px;
-  }
-  #vis_table{
-    width: 80%;
-    margin-bottom: 50px;
-  }
-
-  table,th,td{
-    margin: 0 auto;
-    text-align: center;
-    background: #f7f7f7;
-  }
-  tbody td:first-child{
-    font-weight: bold;
-  }
-
-  h1,h3,h4{
-    text-align: center;
-  }
-  h1{
-    margin-bottom: 50px;
-  }
-  #d2{
-    position: absolute;
-    top:700px;
-  }
-  table td{
-    border: 1px solid #c3c3c3;
-  }
-</style>
-</head>
-<body>
-<h1>Table_vis.js Demo Page</h1>
-<h3>What is it
-</h3>
-<p> table_vis.js can generate a visualisation as soon as some data values are selected on a data table.</p>
-<p>When users click any data values on the data table implemented table_vis.js, a button component consisting of ROW button and COL button display.</p>
-<p>once the ROW button is clicked, table_vis.js will collect the data in the same row as the clicked data and draw the visualisation to compare them while the COL button is used to compare the column data.</p>
-<p>The table implemented table_vis.js is expected to consist of &lt thead &gt and &lt tbody&gt.
-   The row in &lt thead&gt will be regarded as the row title while the 1st column in &lt tbody&gt will be considered as column title.
-   Developed for visualising tabular data on demand.
-   Developed for adapting the information overload as people always just concern about the special row or column in data tables.
-</p>
-<h3>How to install and use</h3>
-<p>1.<code>npm install table_vis --save</code>
-</p>
-<p>
-  2.<code>import table_vis from 'table_vis'</code>
-  or
-  <code>let table_vis = require('table_vis');</code>
-</p>
-<p>
-  3.<code>table_vis.vis(table)</code>
-</p>
-<h3>What does it look like👇</h3>
-<h4>Players Score Table</h4>
-<table  class='table'>
-<thead>
-<tr>
-<th>Name</th><th>Round1</th><th>Round2</th><th>Round3</th><th>Round4</th>
-    <th>Round5</th><th>Round6</th><th>1/8 Final</th><th>1/4 Final</th><th>Semi Final</th><th>Semi Final</th><th>Country</th><th>Gender</th>
-</tr>
-</thead>
-<tbody>
-  <tr>
-  <td>Andy</td><td>92</td><td>73</td>
-  <td>84</td><td>16</td><td>22</td><td>93</td><td>14</td><td>54</td><td>71</td><td>92</td><td>USA</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Judy</td><td>82</td><td>83</td>
-  <td>36</td><td>51</td><td>62.5</td><td>31</td><td>64</td><td>15</td><td>20</td><td>94</td><td>USA</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>John</td><td>59</td><td>13</td>
-  <td>4</td><td>5</td><td>2.5/1.22</td><td>24</td><td>14</td><td>20</td><td>22</td><td>13</td><td>UK</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Yarn</td><td>144</td><td>90</td>
-  <td>800</td><td>75</td><td>3/51</td><td>73</td><td>64</td><td>20</td><td>22</td><td>93</td><td>CHN</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Chen</td><td>72</td><td>13</td><td>84</td><td>85</td><td>21</td><td>43</td><td>64</td><td>14</td><td>22</td><td>13</td><td>CHN</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Jackyr</td><td>52</td><td>74</td><td>64</td><td>55</td><td>91</td><td>53</td><td>14</td><td>84</td><td>52</td><td>73</td><td>JAP</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Son2r</td><td>34</td><td>5/80</td><td>64</td><td>65</td><td>71</td><td>39</td><td>40</td><td>86</td><td>52</td><td>73</td><td>KOR</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Long3</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UK</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Owen4a</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nick2a</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Son1s</td><td>34</td><td>5/80</td><td>64</td><td>65</td><td>71</td><td>39</td><td>40</td><td>86</td><td>52</td><td>73</td><td>KOR</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Long3a</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UGD</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Owenq</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickd</td><td>81</td><td>50</td><td>24</td><td>15</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickdy</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>kkNickdt</td><td>81</td><td>80</td><td>64</td><td>16</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Long3a</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UGD</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>2Owenq</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>dNickd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nidckd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>hhNickdy</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>klcd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-
-</tbody>
-</table>
-
-<p>aslk</p>
-<table  class='table'>
-<thead>
-<tr>
-<th>Name</th><th>Round1</th><th>Round2</th><th>Round3</th><th>Round4</th>
-    <th>Round5</th><th>Round6</th><th>1/8 Final</th><th>1/4 Final</th><th>Semi Final</th><th>Semi Final</th><th>Country</th><th>Gender</th>
-</tr>
-</thead>
-<tbody>
-  <tr>
-  <td>Andy</td><td>92</td><td>73</td>
-  <td>84</td><td>16</td><td>22</td><td>93</td><td>14</td><td>54</td><td>71</td><td>92</td><td>USA</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Judy</td><td>82</td><td>83</td>
-  <td>36</td><td>51</td><td>62.5</td><td>31</td><td>64</td><td>15</td><td>20</td><td>94</td><td>USA</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>John</td><td>59</td><td>13</td>
-  <td>4</td><td>5</td><td>2.5/1.22</td><td>24</td><td>14</td><td>20</td><td>22</td><td>13</td><td>UK</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Yarn</td><td>144</td><td>90</td>
-  <td>800</td><td>75</td><td>3/51</td><td>73</td><td>64</td><td>20</td><td>22</td><td>93</td><td>CHN</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Chen</td><td>72</td><td>13</td><td>84</td><td>85</td><td>21</td><td>43</td><td>64</td><td>14</td><td>22</td><td>13</td><td>CHN</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Jackyr</td><td>52</td><td>74</td><td>64</td><td>55</td><td>91</td><td>53</td><td>14</td><td>84</td><td>52</td><td>73</td><td>JAP</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Son2r</td><td>34</td><td>5/80</td><td>64</td><td>65</td><td>71</td><td>39</td><td>40</td><td>86</td><td>52</td><td>73</td><td>KOR</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Long3</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UK</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Owen4a</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nick2a</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Son1s</td><td>34</td><td>5/80</td><td>64</td><td>65</td><td>71</td><td>39</td><td>40</td><td>86</td><td>52</td><td>73</td><td>KOR</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Long3a</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UGD</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>Owenq</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickd</td><td>81</td><td>50</td><td>24</td><td>15</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nickdy</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>kkNickdt</td><td>81</td><td>80</td><td>64</td><td>16</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Long3a</td><td>1.63</td><td>20</td><td>114</td><td>65</td><td>71</td><td>39</td><td>40</td><td>19</td><td>52</td><td>73</td><td>UGD</td><td>Male</td>
-  </tr>
-  <tr>
-  <td>2Owenq</td><td>81,888</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>90</td><td>52</td><td>73</td><td>UK</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>dNickd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>Nidckd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>hhNickdy</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-  <tr>
-  <td>klcd</td><td>81</td><td>80</td><td>64</td><td>65</td><td>72</td><td>93</td><td>40</td><td>86</td><td>52</td><td>73</td><td>FRC</td><td>FeMale</td>
-  </tr>
-
-</tbody>
-</table>
-
-<script src="table_vis.min.js">
-</script>
-<script>
-  table_vis.vis(document.getElementsByTagName('table')[0]);
-</script>
-</html>
+						<td>34</td>
+						<td>5/80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>KOR</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UGD</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>50</td>
+						<td>24</td>
+						<td>15</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>16</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>1.63</td>
+						<td>20</td>
+						<td>114</td>
+						<td>65</td>
+						<td>71</td>
+						<td>39</td>
+						<td>40</td>
+						<td>19</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UGD</td>
+						<td>Male</td>
+					</tr>
+					<tr>
+						<td>81,888</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>90</td>
+						<td>52</td>
+						<td>73</td>
+						<td>UK</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+					<tr>
+						<td>81</td>
+						<td>80</td>
+						<td>64</td>
+						<td>65</td>
+						<td>72</td>
+						<td>93</td>
+						<td>40</td>
+						<td>86</td>
+						<td>52</td>
+						<td>73</td>
+						<td>FRC</td>
+						<td>FeMale</td>
+					</tr>
+				</tbody>
+			</table>
+			<script src="table_vis.min.js">
+			</script>
+			<script>
+				table_vis.vis(document.getElementsByTagName('table')[0]);
+				table_vis.vis(document.getElementsByTagName('table')[1]);
+			</script>
+		</html>
+		

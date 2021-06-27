@@ -12,9 +12,9 @@ import DrawChart from "../Functions/Charts/DrawChart";
  *    this.props:
  *      show - boolean to cause modal to show
  *      close - function to close modal
- *      columnDefs - array of objects defining columns: their names and datatypes
- *      gridData - all the data on the grid
- *      selectedData - selected cells on the grid, an array of arrays consistsing of row, column, row2, column2
+ *      description - the name of the row/column being visualised
+ *      data - the data to be visualised
+ *      columnDefs - the definitions of all the columns in the grid
  */
 class VisualiseModal extends Component {
   state = {
@@ -28,6 +28,8 @@ class VisualiseModal extends Component {
     //    (such as within `render`). Render methods should be a pure function of
     //    props and state.
     //this.props.addHistory("Loaded visualiser", this.props.description);
+
+    console.log("VisualiseModal", this.props);
   }
 
   /**
@@ -35,9 +37,7 @@ class VisualiseModal extends Component {
    * cell of the structure selected.
    */
   setButtons = () => {
-    //console.log("setButtons");
     if (this.state.selectedGraph === null) {
-      //console.log("Default chart");
       this.visualiserSelected("bar");
     }
 
@@ -83,10 +83,18 @@ class VisualiseModal extends Component {
   };
 
   DrawChart = () => {
-    //console.log("DrawChart");
-    const graphData = this.props.data.values;
+    const graphData = this.props.data;
     const width = this.getContainerWidth();
-    DrawChart(graphData, width, this.state.selectedGraph);
+    const columnDefs = this.props.columnDefs;
+    const selectedCell = this.props.selectedCell;
+    DrawChart(
+      graphData.values,
+      width,
+      this.state.selectedGraph,
+      columnDefs,
+      graphData.dataType,
+      selectedCell
+    );
   };
 
   /**
