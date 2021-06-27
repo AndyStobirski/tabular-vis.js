@@ -12,6 +12,8 @@
 // DONE Customise filter context menu to remove options for inserting / removing columns
 // TODO Add warning of data loss on back navigate
 // FIXME Loading a visualisation for will reset the dataset, removing order
+// TODO implement display of  this.state.selectedCellValue
+// TODO implement display of  this.state.rowsDisplayed
 
 import React, { Component } from "react";
 import NavBar from "./NavBar";
@@ -21,6 +23,7 @@ import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import VisualiseModal from "./VisualiseModal";
 import ExportModal from "./ExportModal";
 import Handsontable from "handsontable";
@@ -48,6 +51,9 @@ class ViewData extends Component {
     gridIsFiltered: false,
 
     dataSelected: null,
+    selectedCellValue: null,
+    rowsDisplayed: 0,
+    selectedCell: null,
   };
 
   UpdateStateValue = (property, value, func) => {
@@ -97,8 +103,7 @@ class ViewData extends Component {
 
   //#region Grid configuration
   hotSettings = () => {
-    //console.log(this.columns());
-    //console.log("HotSettings");
+    console.log("HotSettings");
     return {
       licenseKey: "non-commercial-and-evaluation",
       data: this.props.values.dataToView,
@@ -237,14 +242,12 @@ class ViewData extends Component {
       },
     };
 
-    var dataType = "string";
+    var dataType = "text";
     var columnDefinitions = this.props.values.columnDefinitions;
     if (ret.structure === "Column") {
-      //console.log("col", this.props.columnDefs[ret.value]);
       if (columnDefinitions[ret.value].dataType === "numeric")
         dataType = columnDefinitions[ret.value].dataType;
     } else {
-      //console.log("row", this.props.columnDefs[0]);
       if (columnDefinitions[0].dataType === "numeric")
         dataType = columnDefinitions[0].dataType;
     }
@@ -259,6 +262,13 @@ class ViewData extends Component {
    * Attached required events to HotTable grid
    */
   componentDidMount() {
+    this.props.addHistory(
+      "Viewing data",
+      this.props.values.dataToView.length + " rows present"
+    );
+
+    this.setState({ rowsDisplayed: this.props.values.dataToView.length });
+
     const hti = this.hotTableComponent.current.hotInstance;
     /*
       in the current version of 9.0.0. event notifications for common grid 
@@ -269,11 +279,18 @@ class ViewData extends Component {
       So, we are using an older version 7.4.2 
     */
     hti.addHook("afterColumnMove", this.afterColumnMove);
-    hti.addHook("beforeFilter", this.beforeFilter);
+    //hti.addHook("beforeFilter", this.beforeFilter);
     hti.addHook("afterFilter", this.afterFilter);
     hti.addHook("afterRowMove", this.afterRowMove);
     hti.addHook("afterColumnSort", this.afterColumnSort);
+    hti.addHook("afterOnCellMouseUp", this.afterOnCellMouseUp);
   }
+
+  afterOnCellMouseUp = (event, coords, TD) => {
+    //console.log(event, coords);
+    //console.log(TD);
+    this.setState({ selectedCell: coords });
+  };
 
   /**
    * https://handsontable.com/docs/9.0.0/Hooks.html#event:afterRowMove
@@ -333,6 +350,8 @@ class ViewData extends Component {
    * ]
    */
   afterFilter = (e) => {
+    this.setState({ rowsDisplayed: this.visibleGridData().length });
+
     //console.log("afterFilter");
     var filterDescription = "";
     var args;
@@ -527,14 +546,13 @@ class ViewData extends Component {
             show={this.state.showVisualiser}
             close={this.visualiserClose}
             description={this.getSelectedCells().description()}
-            // columnDefs={this.props.values.columnDefinitions}
-            // gridData={this.visibleGridData()}
-            // selectionData={this.getSelectedCells()}
+            columnDefs={this.props.values.columnDefinitions}
             data={VisualisationData.MakeData(
               this.getSelectedCells(),
               this.props.values.columnDefinitions,
               this.visibleGridData()
             )}
+            selectedCell={this.state.selectedCell}
           />
         )}
         <ExportModal
@@ -566,6 +584,9 @@ class ViewData extends Component {
                 Clear Sort
               </Button>
             </ButtonGroup>
+            <Alert variant="info">
+              Rows displayed: {this.state.rowsDisplayed}
+            </Alert>
           </FormGroup>
         </Form>
 
