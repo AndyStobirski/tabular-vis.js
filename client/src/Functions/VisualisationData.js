@@ -14,8 +14,6 @@ const VisualisationData = {
     let values = [];
     let cell = null;
 
-    console.log({ iAm: iAm, columnDefs: columnDefs, gridData: gridData });
-
     if (iAm.structure === "Row") {
       var row = gridData[iAm.value];
 
@@ -67,7 +65,6 @@ const VisualisationData = {
       values: values,
     };
 
-    ////console.log(JSON.stringify(graphData));
     return graphData;
   },
 };

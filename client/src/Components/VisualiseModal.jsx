@@ -17,6 +17,10 @@ import DrawChart from "../Functions/Charts/DrawChart";
  *      columnDefs - the definitions of all the columns in the grid
  */
 class VisualiseModal extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.VisualiserContainerRef = React.createRef();
+  }
   state = {
     graphData: null,
     selectedGraph: null,
@@ -28,7 +32,7 @@ class VisualiseModal extends Component {
     //    (such as within `render`). Render methods should be a pure function of
     //    props and state.
     //this.props.addHistory("Loaded visualiser", this.props.description);
-    console.log("VisualiseModal", this.props);
+    //console.log("VisualiseModal", this.props);
   }
 
   /**
@@ -114,13 +118,6 @@ class VisualiseModal extends Component {
     //   return <div />;
     // }
 
-    const styles = {
-      container: {
-        display: "grid",
-        justifyItems: "center",
-      },
-    };
-
     return (
       <Modal
         show={this.props.show}
@@ -144,7 +141,7 @@ class VisualiseModal extends Component {
             {this.setButtons()}
           </ButtonGroup>
 
-          <div id="container"></div>
+          <div id="container" ref={this.VisualiserContainerRef}></div>
           {this.DrawChart()}
           <p />
           <p />

@@ -1,41 +1,39 @@
 import * as d3 from "d3";
 import ChartBuildBody from "./ChartBuildBody";
 
+/**
+ * Draw a box plot
+ *
+ * Test the accuracy here http://www.alcula.com/calculators/statistics/box-plot/
+ *
+ * @param {*} data
+ * @param {*} selector
+ * @param {*} dimensions
+ */
 const DrawBoxPlot = function (data, selector, dimensions) {
   var svg = ChartBuildBody(selector, dimensions);
-  // Compute summary statistics used for the box:
+
+  //Compute summary statistics used for the box
   var data_sorted = data.sort(d3.ascending);
   var q1 = d3.quantile(data_sorted, 0.25);
   var median = d3.quantile(data_sorted, 0.5);
   var q3 = d3.quantile(data_sorted, 0.75);
-  var interQuantileRange = q3 - q1;
   var min = d3.min(data_sorted);
   var max = d3.max(data_sorted);
-
-  console.log({
-    q1: q1,
-    median: median,
-    q3: q3,
-    interQuantileRange: interQuantileRange,
-    min: min,
-    max: max,
-  });
-
-  console.log(d3.min(data_sorted), d3.max(data_sorted));
 
   // Show the Y scale
   var y = d3
     .scaleLinear()
     .domain([d3.min(data_sorted) - 10, d3.max(data_sorted) + 10])
-    //.domain([0, 100])
     .range([dimensions.internalHeight(), 0]);
+
   svg.call(d3.axisLeft(y));
 
   // a few features for the box
-  var center = 200;
+  const center = 200;
   const boxWidth = 100;
 
-  // Show the main vertical line
+  //Vertical line
   svg
     .append("line")
     .attr("x1", center)
@@ -44,7 +42,7 @@ const DrawBoxPlot = function (data, selector, dimensions) {
     .attr("y2", y(max))
     .attr("stroke", "black");
 
-  // Show the box
+  //Draw the box
   svg
     .append("rect")
     .attr("x", center - boxWidth / 2)
@@ -54,7 +52,7 @@ const DrawBoxPlot = function (data, selector, dimensions) {
     .attr("stroke", "black")
     .style("fill", "#69b3a2");
 
-  // show median, min and max horizontal lines
+  //Draw median, min and max horizontal lines
   svg
     .selectAll("toto")
     .data([min, median, max])
@@ -107,7 +105,7 @@ const DrawBoxPlot = function (data, selector, dimensions) {
     .text("upper quartile: " + q3);
 
   //doing this on the other side as it is possible for
-  //a median to be
+  //a median to be the same as q1 or q3
   const leftEdge = center - boxWidth / 2 - 20;
   svg
     .append("text")

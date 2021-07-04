@@ -16,8 +16,6 @@ class ExportModal extends Component {
   };
 
   exportToFile = () => {
-    ////console.log(this.state);
-
     const hotInstance = this.props.tableInstance;
     const exportPlugin1 = hotInstance.getPlugin("exportFile");
 
@@ -40,7 +38,6 @@ class ExportModal extends Component {
   };
 
   render() {
-    ////console.log(this.props);
     return (
       <Modal show={this.props.show} centered onHide={this.props.close}>
         <Modal.Header closeButton>

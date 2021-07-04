@@ -12,14 +12,8 @@ const DrawPointPlotHorizontal = function (data, selector, dimensions) {
   dimensions.margins.left = 100;
   var svg = ChartBuildBody(selector, dimensions);
 
-  ////console.log(data);
   //an array of arrays [[key, [,]]]
   var d3Groups = d3.groups(data, (v) => v.value);
-  ////console.log(d3Groups);
-  // //sort from big to little
-  // data = data.sort(function (b, a) {
-  //   return a[1].length - b[1].length;
-  // });
 
   // Add X axis
   var x = d3

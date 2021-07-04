@@ -92,8 +92,6 @@ const ConversionUtilities = {
       });
     });
 
-    ////console.log(data, colHeadersView);
-
     var retVal = {
       colHeadersView: colHeadersView,
       dataToView: data,

@@ -26,8 +26,8 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import VisualiseModal from "./VisualiseModal";
 import ExportModal from "./ExportModal";
-import Handsontable from "handsontable";
 import VisualisationData from "../Functions/VisualisationData";
+import Handsontable from "handsontable";
 
 class ViewData extends Component {
   constructor(props, context) {
@@ -41,8 +41,6 @@ class ViewData extends Component {
     this.downloadClose = this.downloadClose.bind(this);
     this.visualiserShow = this.visualiserShow.bind(this);
     this.visualiserClose = this.visualiserClose.bind(this);
-
-    //this.afterFilter = this.afterFilter.bind(this);
   }
 
   state = {
@@ -54,10 +52,6 @@ class ViewData extends Component {
     selectedCellValue: null,
     rowsDisplayed: 0,
     selectedCell: null,
-  };
-
-  UpdateStateValue = (property, value, func) => {
-    this.setState({ [property]: value }, func);
   };
 
   //#region Page navigation
@@ -103,13 +97,10 @@ class ViewData extends Component {
 
   //#region Grid configuration
   hotSettings = () => {
-    //console.log("HotSettings");
     return {
       licenseKey: "non-commercial-and-evaluation",
       data: this.props.values.dataToView,
-      //data: Handsontable.helper.createSpreadsheetData(1000, 1000),
       colHeaders: this.colHeaders(),
-      // colWidths: this.colWidths(),
       columns: this.columns(),
       rowHeaders: true,
       readOnly: true,
@@ -164,14 +155,20 @@ class ViewData extends Component {
     const visualiserShow = this.visualiserShow;
     const addHistory = this.props.addHistory;
 
+    //Note the use of the time outs below, which is used to fix an issue
+    //described in this webpage for HandsOnTable
+    //https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/9
+
     return {
       items: {
+        copy: { Name: "Copy selected.." },
+        separator: Handsontable.plugins.ContextMenu.SEPARATOR,
         Rows: {
           // Own custom option
           name: "Row...",
           callback: function (key, selection, clickEvent) {
             const selectRows = this.selectRows;
-            //Note the use of the time out
+
             setTimeout(function () {
               const start = selection[0].start;
               selectRows(start.row, start.row);
@@ -186,9 +183,7 @@ class ViewData extends Component {
           name: "Column...",
           callback: function (key, selection, clickEvent) {
             const selectColumns = this.selectColumns;
-            //Note the use of the time out, which is used to fix an issue
-            //described in this webpage for HandsOnTable
-            //https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/9
+
             setTimeout(function () {
               const start = selection[0].start;
               selectColumns(start.col, start.col);
@@ -211,11 +206,6 @@ class ViewData extends Component {
    * @returns Array of arrays representing the object data
    */
   visibleGridData = () => {
-    //the ? is the Optional Chaining Operator
-    //If a property exists, it proceeds to the next check, or returns the value.
-    //Any failure will immediately short-circuit and return undefined.
-
-    //On initial page load, current will be null
     const data = this.hotTableComponent.current.hotInstance.getData();
     var copy = data.map(function (arr) {
       return arr.slice();
@@ -279,16 +269,19 @@ class ViewData extends Component {
       So, we are using an older version 7.4.2 
     */
     hti.addHook("afterColumnMove", this.afterColumnMove);
-    //hti.addHook("beforeFilter", this.beforeFilter);
     hti.addHook("afterFilter", this.afterFilter);
     hti.addHook("afterRowMove", this.afterRowMove);
     hti.addHook("afterColumnSort", this.afterColumnSort);
-    hti.addHook("afterOnCellMouseUp", this.afterOnCellMouseUp);
+
+    //Uncomment the line below to enable this event.
+    //The associated function uses a SetState which cause
+    //the grid to reset, which is a known and currently
+    //unsolved is with HandsOnTable - see here https://forum.handsontable.com/t/maintaining-data-in-grid-after-setstate/3982
+
+    //hti.addHook("afterOnCellMouseUp", this.afterOnCellMouseUp);
   }
 
   afterOnCellMouseUp = (event, coords, TD) => {
-    ////console.log(event, coords);
-    ////console.log(TD);
     this.setState({ selectedCell: coords });
   };
 
@@ -299,8 +292,6 @@ class ViewData extends Component {
    * @param {*} finalIndex a start index for the moved columns
    */
   afterRowMove = (movedRows, finalIndex) => {
-    ////console.log("afterRowMove", [movedRows, finalIndex]);
-
     this.props.addHistory(
       "Moved rows",
       "rows " +
@@ -316,20 +307,7 @@ class ViewData extends Component {
    * @param {*} currentSortConfig 	Current sort configuration
    * @param {*} destinationSortConfigs  Destination sort configuration
    */
-  afterColumnSort = (currentSortConfig, destinationSortConfigs) => {
-    ////console.log(currentSortConfig, destinationSortConfigs);
-  };
-
-  /**
-   *
-   * @param {*} e
-   */
-  beforeFilter = (e) => {
-    this.props.addHistory(
-      "Before filter action",
-      this.props.values.dataToView.length + " rows present"
-    );
-  };
+  afterColumnSort = (currentSortConfig, destinationSortConfigs) => {};
 
   /**
    * Fired after column filter called
@@ -352,7 +330,6 @@ class ViewData extends Component {
   afterFilter = (e) => {
     this.setState({ rowsDisplayed: this.visibleGridData().length });
 
-    ////console.log("afterFilter");
     var filterDescription = "";
     var args;
 
@@ -553,6 +530,7 @@ class ViewData extends Component {
               this.visibleGridData()
             )}
             selectedCell={this.state.selectedCell}
+            addHistory={this.props.addHistory}
           />
         )}
         <ExportModal

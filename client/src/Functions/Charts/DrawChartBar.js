@@ -3,7 +3,6 @@ import ChartBuildBody from "./ChartBuildBody";
 
 //as per https://stackoverflow.com/a/41948540
 const DrawChartBar = function (data, selector, dimensions) {
-  ////console.log("DrawChartBar", "Begin");
   var svg = ChartBuildBody(selector, dimensions);
 
   // set the ranges

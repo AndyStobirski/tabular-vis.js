@@ -64,17 +64,13 @@ class SelectData extends Component {
 
       const body = await response.text();
 
-      //console.log(JSON.parse(body).Data);
-
       this.props.addHistory(
         "tables loaded ",
         JSON.parse(body).Data.length.toString()
       );
 
       this.setLoadedData(JSON.parse(body).Data);
-    } catch (exception) {
-      ////console.log("exception", exception);
-    }
+    } catch (exception) {}
   };
 
   /**
@@ -91,7 +87,6 @@ class SelectData extends Component {
     setErrorData(null);
 
     Array.from(e.dataTransfer.files).forEach(async (file) => {
-      ////console.log(file.name);
       const text = await file.text();
 
       parse(text, {
@@ -185,7 +180,6 @@ class SelectData extends Component {
    */
   parseTables = () => {
     if (this.state.LoadErrors) {
-      ////console.log(this.state.LoadErrors);
       return (
         <Alert variant="danger">
           <Alert.Heading>
@@ -218,7 +212,6 @@ class SelectData extends Component {
   };
 
   predefinedDataSources = (e) => {
-    ////console.log(this.props.values.TestLinks[e]);
     this.props.updateStateValue("InputData", this.props.values.TestLinks[e]);
   };
 

@@ -12,7 +12,6 @@ import Lookups from "../GetData";
 // TODO Clean up code
 // TODO Add percentile values
 const DrawChartPie = function (data, selector, dimensions) {
-  ////console.log("DrawChartPie", data);
   var svg = ChartBuildBody(selector, dimensions);
   var radius =
     Math.min(dimensions.internalWidth(), dimensions.internalHeight()) / 2 -

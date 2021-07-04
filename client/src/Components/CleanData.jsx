@@ -38,15 +38,11 @@ class CleanData extends Component {
       dataToClean,
       columnDefinitions
     );
-    ////console.log(retVal);
-
-    ////console.log(this.state.changedRows);
 
     var historyItems = [];
 
     this.state.changedRows.forEach((change, index) => {
       var currentCol = columnDefinitions[index];
-      ////console.log(currentCol);
 
       if (change.name) {
         historyItems.push(
@@ -74,11 +70,8 @@ class CleanData extends Component {
           )
         );
       }
-
-      ////console.log(change, index);
     });
 
-    ////console.log(historyItems);
     this.props.addHistory(null, null, historyItems);
 
     this.props.updateStateValue("colHeadersView", retVal.colHeadersView);
@@ -100,7 +93,6 @@ class CleanData extends Component {
       return { name: false, visible: false, dataType: false };
     });
 
-    ////console.log(data);
     this.setState({
       changedRows: data,
     });
@@ -118,8 +110,6 @@ class CleanData extends Component {
    * @returns
    */
   update = (index, propName) => (e) => {
-    ////console.log(propName);
-
     const changedRows = this.state.changedRows;
 
     if (propName === "colName") changedRows[index].name = true;

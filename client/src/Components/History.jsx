@@ -61,11 +61,6 @@ class History extends Component {
             </p>
           );
         })}
-        {/* <Form.Group style={{ fontSize: 12 }}>
-          {this.getHistory().map((historyItem, index) => {
-            return <Form.Label key={index}>{historyItem}</Form.Label>;
-          })}
-        </Form.Group> */}
       </Form>
     );
   }
