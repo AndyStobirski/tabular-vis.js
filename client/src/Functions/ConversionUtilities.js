@@ -92,7 +92,7 @@ const ConversionUtilities = {
       });
     });
 
-    //console.log(data, colHeadersView);
+    ////console.log(data, colHeadersView);
 
     var retVal = {
       colHeadersView: colHeadersView,
@@ -102,12 +102,23 @@ const ConversionUtilities = {
     return retVal;
   },
 
-  //data consists of an array object { name: "", value: "" }
-  //as version 1
-  //TODO Clean up
-  makePieData: function (data) {
-    //console.log("MakepieData", data);
-    var grp = d3.group(data, (v) => v.value);
+  /*
+   * All the functions below are to convert the selected
+   * spreadsheet data into something that is used in the
+   * graph drawing function.
+   *
+   * The parameter pData takes the form of an object array
+   * of [{ name: "", value: "" }...]
+   *
+   */
+
+  /**
+   * Make pie data by grouping the value and counting it
+   * @param {*} pData
+   * @returns Two values: 1st in last and the rest
+   */
+  makePieData: function (pData) {
+    var grp = d3.group(pData, (v) => v.value);
     var pie = [];
     grp.forEach((g) => {
       pie.push({ name: g[0].value, value: g.length });
@@ -121,34 +132,64 @@ const ConversionUtilities = {
     ];
   },
 
-  // TODO Do this
-  groupTextData: function (data) {
-    var grp = d3.group(data, (v) => v.value);
+  /**
+   * Count each item value item in the list
+   * @param {*} pData
+   * @returns
+   */
+  groupTextData: function (pData) {
+    var grp = d3.group(pData, (v) => v.value);
     var pie = [];
     grp.forEach((g) => {
       pie.push({ name: g[0].value, value: g.length });
     });
     return pie;
   },
-  makePieData1: function (data) {
-    //convert to numbers
-    data.forEach(
-      (r) => (r.value = ConversionUtilities.convertToNumber(r.value))
-    );
 
-    //remove none numbers
-    data = data.filter((f) => f.value !== null);
-
-    //calculate percentages
-    const total = d3.sum(
-      data.map((c) => {
-        return c.value;
-      })
-    );
-    data.forEach((c) => (c.value = (c.value / total) * 100));
-
-    return data;
+  /**
+   * Convert all value items to number
+   * @param {*} pData
+   * @returns number array
+   */
+  convertToGraph: function (pData) {
+    return pData.map((d) => {
+      d.value = this.convertToNumber(d.value);
+      return d;
+    });
   },
+
+  /**
+   * Extract the number values from the provided data and return only them
+   * @param {*} pData
+   * @returns Array of numbers
+   */
+  convertToNumberArray: function (pData) {
+    return pData
+      .map((v) => {
+        return this.convertToNumber(v.value);
+      })
+      .filter((item) => item);
+  },
+
+  // ,makePieData1: function (data) {
+  //   //convert to numbers
+  //   data.forEach(
+  //     (r) => (r.value = ConversionUtilities.convertToNumber(r.value))
+  //   );
+
+  //   //remove none numbers
+  //   data = data.filter((f) => f.value !== null);
+
+  //   //calculate percentages
+  //   const total = d3.sum(
+  //     data.map((c) => {
+  //       return c.value;
+  //     })
+  //   );
+  //   data.forEach((c) => (c.value = (c.value / total) * 100));
+
+  //   return data;
+  // },
 };
 
 export default ConversionUtilities;

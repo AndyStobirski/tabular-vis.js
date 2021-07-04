@@ -28,7 +28,6 @@ class VisualiseModal extends Component {
     //    (such as within `render`). Render methods should be a pure function of
     //    props and state.
     //this.props.addHistory("Loaded visualiser", this.props.description);
-
     console.log("VisualiseModal", this.props);
   }
 
@@ -103,7 +102,7 @@ class VisualiseModal extends Component {
    */
   getContainerWidth = () => {
     var element = d3.select("#container").node();
-    if (!element) return 800;
+    if (!element) return 100;
     return element.getBoundingClientRect().width;
   };
 
@@ -145,7 +144,7 @@ class VisualiseModal extends Component {
             {this.setButtons()}
           </ButtonGroup>
 
-          <div id="container" style={styles.container}></div>
+          <div id="container"></div>
           {this.DrawChart()}
           <p />
           <p />

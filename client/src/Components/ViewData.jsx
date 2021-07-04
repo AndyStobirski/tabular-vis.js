@@ -103,7 +103,7 @@ class ViewData extends Component {
 
   //#region Grid configuration
   hotSettings = () => {
-    console.log("HotSettings");
+    //console.log("HotSettings");
     return {
       licenseKey: "non-commercial-and-evaluation",
       data: this.props.values.dataToView,
@@ -287,8 +287,8 @@ class ViewData extends Component {
   }
 
   afterOnCellMouseUp = (event, coords, TD) => {
-    //console.log(event, coords);
-    //console.log(TD);
+    ////console.log(event, coords);
+    ////console.log(TD);
     this.setState({ selectedCell: coords });
   };
 
@@ -299,7 +299,7 @@ class ViewData extends Component {
    * @param {*} finalIndex a start index for the moved columns
    */
   afterRowMove = (movedRows, finalIndex) => {
-    //console.log("afterRowMove", [movedRows, finalIndex]);
+    ////console.log("afterRowMove", [movedRows, finalIndex]);
 
     this.props.addHistory(
       "Moved rows",
@@ -317,7 +317,7 @@ class ViewData extends Component {
    * @param {*} destinationSortConfigs  Destination sort configuration
    */
   afterColumnSort = (currentSortConfig, destinationSortConfigs) => {
-    //console.log(currentSortConfig, destinationSortConfigs);
+    ////console.log(currentSortConfig, destinationSortConfigs);
   };
 
   /**
@@ -352,7 +352,7 @@ class ViewData extends Component {
   afterFilter = (e) => {
     this.setState({ rowsDisplayed: this.visibleGridData().length });
 
-    //console.log("afterFilter");
+    ////console.log("afterFilter");
     var filterDescription = "";
     var args;
 

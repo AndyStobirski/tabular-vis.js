@@ -14,7 +14,7 @@ app.get("/api/hello", (req, res) => {
 });
 
 app.post("/api/LoadTable", (req, res) => {
-  //console.log(req.body.post);
+  ////console.log(req.body.post);
 
   const retVal = {
     Message: null,
@@ -25,7 +25,7 @@ app.post("/api/LoadTable", (req, res) => {
     const tabletojson = require("tabletojson").Tabletojson;
 
     tabletojson.convertUrl(req.body.post, function (tablesAsJson) {
-      //console.log(tablesAsJson);
+      ////console.log(tablesAsJson);
       //res.send(tablesAsJson);
 
       retVal.Data = tablesAsJson;

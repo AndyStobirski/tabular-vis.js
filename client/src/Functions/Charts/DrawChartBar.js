@@ -3,7 +3,7 @@ import ChartBuildBody from "./ChartBuildBody";
 
 //as per https://stackoverflow.com/a/41948540
 const DrawChartBar = function (data, selector, dimensions) {
-  //console.log("DrawChartBar", "Begin");
+  ////console.log("DrawChartBar", "Begin");
   var svg = ChartBuildBody(selector, dimensions);
 
   // set the ranges
@@ -56,7 +56,7 @@ const DrawChartBar = function (data, selector, dimensions) {
 
   // add the y Axis
   svg.append("g").call(d3.axisLeft(y));
-  //console.log("DrawChartBar", "End");
+  ////console.log("DrawChartBar", "End");
 };
 
 export default DrawChartBar;

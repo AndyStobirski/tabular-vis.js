@@ -7,6 +7,8 @@ import DrawPointPlotVertical from "./DrawPointPlotVertical";
 import * as d3 from "d3";
 import ChartDimensions from "../ChartDimensions";
 import ConversionUtilities from "../ConversionUtilities";
+import ChartBuildBody from "./ChartBuildBody";
+import DrawBoxPlot from "./DrawBoxPlot";
 
 //TODO implement pie chart
 //TODO Implement box chart
@@ -32,27 +34,21 @@ const DrawChart = function (
 ) {
   const selector = "#container";
 
+  const dimensions = ChartDimensions(width);
+
   //clear the container of any contents
   d3.select(selector).selectAll("*").remove();
 
-  console.log(selectedCell.col, selectedCell.row);
-  const dimensions = ChartDimensions(width);
-
-  console.log(data);
-
-  console.log(dataType);
-
-  //The selected data needs to be converted into an appropriate
-  //format to be visualised
-
   if (chartType === "pie") {
     data = ConversionUtilities.makePieData(data);
+  } else if (chartType === "box") {
+    data = ConversionUtilities.convertToNumberArray(data);
   } else if (dataType === "text") {
     data = ConversionUtilities.groupTextData(data);
-    console.log(data);
-  }
+    //console.log(data);
+  } else data = ConversionUtilities.convertToGraph(data);
 
-  console.log(data);
+  ////console.log(data);
 
   // eslint-disable-next-line default-case
   switch (chartType) {
@@ -75,6 +71,10 @@ const DrawChart = function (
 
     case "word":
       DrawChartWord(data, selector, dimensions);
+      break;
+
+    case "box":
+      DrawBoxPlot(data, selector, dimensions);
       break;
   }
 };

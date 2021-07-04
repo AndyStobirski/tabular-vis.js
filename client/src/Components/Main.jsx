@@ -63,7 +63,7 @@ class Main extends Component {
   UpdateStateValue = (property, value, func) => {
     this.setState({ [property]: value }, func);
 
-    //console.log(this.state.dataArray);
+    ////console.log(this.state.dataArray);
   };
 
   //proceed to the next step
@@ -115,7 +115,7 @@ class Main extends Component {
   };
 
   toggleHistory = () => {
-    //console.log("Toggle history");
+    ////console.log("Toggle history");
     const collapsed = this.state.collapsed;
     this.setState({ collapsed: !collapsed });
   };
