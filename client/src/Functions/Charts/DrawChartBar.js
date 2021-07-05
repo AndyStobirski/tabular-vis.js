@@ -6,16 +6,17 @@ const DrawChartBar = function (data, selector, dimensions) {
   var svg = ChartBuildBody(selector, dimensions);
 
   // set the ranges
-  var x = d3.scaleBand().range([0, dimensions.internalWidth()]).padding(0.4);
+  var x = d3
+    .scaleBand()
+    .range([0, dimensions.internalWidth()])
+    .padding(0.4)
+    .domain(
+      data.map(function (n) {
+        return n.name;
+      })
+    );
 
   var y = d3.scaleLinear().range([dimensions.internalHeight(), 0]);
-
-  // Scale the range of the data in the domains
-  x.domain(
-    data.map(function (n) {
-      return n.name;
-    })
-  );
 
   var yMin = d3.min(data, function (n) {
     return n.value;
@@ -28,25 +29,6 @@ const DrawChartBar = function (data, selector, dimensions) {
     }),
   ]);
 
-  // append the rectangles for the bar chart
-  svg
-    .selectAll(".bar")
-    .data(data)
-    .attr("fill", "#69b3a2")
-    .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", function (d) {
-      return x(d.name);
-    })
-    .attr("width", x.bandwidth())
-    .attr("y", function (d) {
-      return y(d.value);
-    })
-    .attr("height", function (d) {
-      return dimensions.internalHeight() - y(d.value);
-    });
-
   // add the x Axis
   svg
     .append("g")
@@ -55,7 +37,39 @@ const DrawChartBar = function (data, selector, dimensions) {
 
   // add the y Axis
   svg.append("g").call(d3.axisLeft(y));
-  ////console.log("DrawChartBar", "End");
+
+  // Create rectangles
+  let bars = svg.selectAll(".bar").data(data).enter().append("g");
+
+  bars
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", function (d) {
+      return x(d.name);
+    })
+    .attr("y", function (d) {
+      return y(d.value);
+    })
+    .attr("width", x.bandwidth())
+    .attr("height", function (d) {
+      return dimensions.internalHeight() - y(d.value);
+    });
+
+  bars
+    .append("text")
+    .text(function (d) {
+      return Math.round(d.value * 100) / 100;
+    })
+    .attr("x", function (d) {
+      return x(d.name) + x.bandwidth() / 2;
+    })
+    .attr("y", function (d) {
+      return y(d.value) - 5;
+    })
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .attr("text-anchor", "middle");
 };
 
 export default DrawChartBar;
