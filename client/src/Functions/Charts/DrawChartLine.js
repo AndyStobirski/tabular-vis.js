@@ -5,16 +5,17 @@ import ChartBuildBody from "./ChartBuildBody";
 const DrawChartLine = function (data, selector, dimensions) {
   var svg = ChartBuildBody(selector, dimensions);
 
-  var x = d3.scaleBand().range([0, dimensions.internalWidth()]).padding(0.4);
+  var x = d3
+    .scaleBand()
+    .range([0, dimensions.internalWidth()])
+    .domain(
+      data.map(function (d) {
+        return d.name;
+      })
+    )
+    .padding(1);
 
   var y = d3.scaleLinear().range([dimensions.internalHeight(), 0]);
-
-  // Scale the range of the data in the domains
-  x.domain(
-    data.map(function (n) {
-      return n.name;
-    })
-  );
 
   var yMin = d3.min(data, function (n) {
     return n.value;
@@ -26,15 +27,6 @@ const DrawChartLine = function (data, selector, dimensions) {
       return n.value;
     }),
   ]);
-
-  // add the x Axis
-  svg
-    .append("g")
-    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
-    .call(d3.axisBottom(x));
-
-  // add the y Axis
-  svg.append("g").call(d3.axisLeft(y));
 
   // Add the line
   svg
@@ -54,6 +46,37 @@ const DrawChartLine = function (data, selector, dimensions) {
           return y(d.value);
         })
     );
+
+  //add value labels
+  svg
+    .append("g")
+    .selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("x", function (d) {
+      console.log(x(d.name), y(d.value));
+      return x(d.name) + x.bandwidth() / 2;
+    })
+    .attr("y", function (d) {
+      return y(d.value) - 5;
+    })
+    .text(function (d) {
+      return Math.round(d.value * 100) / 100;
+    })
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .attr("text-anchor", "middle");
+
+  // add the x Axis
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
+    .call(d3.axisBottom(x));
+
+  // add the y Axis
+  svg.append("g").call(d3.axisLeft(y));
 };
 
 export default DrawChartLine;
