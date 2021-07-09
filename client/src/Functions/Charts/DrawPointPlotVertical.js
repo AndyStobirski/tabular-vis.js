@@ -24,27 +24,20 @@ const DrawPointPlotVertical = function (data, selector, dimensions) {
     )
     .padding(1);
 
-  svg
-    .append("g")
-    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+  var yMin = d3.min(data, function (d) {
+    return d.value;
+  });
 
   // Add Y axis
   var y = d3
     .scaleLinear()
     .domain([
-      d3.min(data, function (d) {
-        return d.value;
-      }),
+      yMin > 0 ? 0 : yMin,
       d3.max(data, function (d) {
         return d.value;
       }),
     ])
     .range([dimensions.internalHeight(), 0]);
-  svg.append("g").call(d3.axisLeft(y));
 
   // Lines
   svg
@@ -79,6 +72,40 @@ const DrawPointPlotVertical = function (data, selector, dimensions) {
     .attr("r", "4")
     .style("fill", "#69b3a2")
     .attr("stroke", "black");
+
+  //add value labels
+  svg
+    .append("g")
+    .selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("x", function (d) {
+      console.log(x(d.name), y(d.value));
+      return x(d.name) + x.bandwidth() / 2;
+    })
+    .attr("y", function (d) {
+      return y(d.value) - 5;
+    })
+    .text(function (d) {
+      console.log(d.value);
+      return Math.round(d.value * 100) / 100;
+    })
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .attr("text-anchor", "middle");
+
+  //draw the axises
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  svg.append("g").call(d3.axisLeft(y));
 };
 
 export default DrawPointPlotVertical;

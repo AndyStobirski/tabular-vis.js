@@ -55,7 +55,6 @@ const DrawChartLine = function (data, selector, dimensions) {
     .enter()
     .append("text")
     .attr("x", function (d) {
-      console.log(x(d.name), y(d.value));
       return x(d.name) + x.bandwidth() / 2;
     })
     .attr("y", function (d) {
@@ -73,7 +72,10 @@ const DrawChartLine = function (data, selector, dimensions) {
   svg
     .append("g")
     .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
 
   // add the y Axis
   svg.append("g").call(d3.axisLeft(y));

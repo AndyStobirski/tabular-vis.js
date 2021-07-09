@@ -29,12 +29,6 @@ const DrawChartBar = function (data, selector, dimensions) {
     }),
   ]);
 
-  // add the x Axis
-  svg
-    .append("g")
-    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
-    .call(d3.axisBottom(x));
-
   // add the y Axis
   svg.append("g").call(d3.axisLeft(y));
 
@@ -55,6 +49,7 @@ const DrawChartBar = function (data, selector, dimensions) {
       return dimensions.internalHeight() - y(d.value);
     });
 
+  //bar char values
   bars
     .append("text")
     .text(function (d) {
@@ -70,6 +65,15 @@ const DrawChartBar = function (data, selector, dimensions) {
     .attr("font-size", "12px")
     .attr("fill", "black")
     .attr("text-anchor", "middle");
+
+  //x axis
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + dimensions.internalHeight() + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
 };
 
 export default DrawChartBar;

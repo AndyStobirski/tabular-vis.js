@@ -9,7 +9,7 @@ const ChartDimensions = function (width) {
     margins: {
       top: 20,
       right: 20,
-      bottom: 30,
+      bottom: 100,
       left: 40,
     },
 

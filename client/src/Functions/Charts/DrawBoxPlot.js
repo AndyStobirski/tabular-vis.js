@@ -22,9 +22,12 @@ const DrawBoxPlot = function (data, selector, dimensions) {
   var max = d3.max(data_sorted);
 
   // Show the Y scale
+  var yMin = d3.min(data_sorted),
+    xMax = d3.max(data_sorted);
+
   var y = d3
     .scaleLinear()
-    .domain([d3.min(data_sorted) - 1, d3.max(data_sorted) + 1])
+    .domain([yMin - yMin / 10, xMax + xMax / 10])
     .range([dimensions.internalHeight(), 0]);
 
   svg.call(d3.axisLeft(y));
@@ -77,31 +80,34 @@ const DrawBoxPlot = function (data, selector, dimensions) {
     .style("text-anchor", "start")
     .style("fill", "black")
     .attr("x", rightEdge)
-    .attr("y", y(max)) //get the SVG coordinate associated number value
+    .attr("y", y(max) + 10) //get the SVG coordinate associated number value
     .text("max: " + max);
 
+  //min label
   svg
     .append("text")
     .style("text-anchor", "start")
     .style("fill", "black")
     .attr("x", rightEdge)
-    .attr("y", y(min))
+    .attr("y", y(min) + 10) //slight offset
     .text("min: " + min);
 
+  // lower quartile
   svg
     .append("text")
     .style("text-anchor", "start")
     .style("fill", "black")
     .attr("x", rightEdge)
-    .attr("y", y(q1))
+    .attr("y", y(q1) + 10)
     .text("lower quartile: " + q1);
 
+  //upper quartile
   svg
     .append("text")
     .style("text-anchor", "start")
     .style("fill", "black")
     .attr("x", rightEdge)
-    .attr("y", y(q3))
+    .attr("y", y(q3) - 10)
     .text("upper quartile: " + q3);
 
   //doing this on the other side as it is possible for
