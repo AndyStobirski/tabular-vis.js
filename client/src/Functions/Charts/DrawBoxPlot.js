@@ -24,7 +24,7 @@ const DrawBoxPlot = function (data, selector, dimensions) {
   // Show the Y scale
   var y = d3
     .scaleLinear()
-    .domain([d3.min(data_sorted) - 10, d3.max(data_sorted) + 10])
+    .domain([d3.min(data_sorted) - 1, d3.max(data_sorted) + 1])
     .range([dimensions.internalHeight(), 0]);
 
   svg.call(d3.axisLeft(y));
