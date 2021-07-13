@@ -516,6 +516,9 @@ class ViewData extends Component {
   //#endregion
 
   render() {
+
+    console.log(this.props.toggleHistoryDisplay);
+    
     return (
       <React.Fragment>
         {this.state.showVisualiser && (
@@ -544,7 +547,7 @@ class ViewData extends Component {
               PrevStep={this.prevStep}
               RefineStep={this.refineStep}
               Title={"View Data Source"}
-              toggleHistory={this.props.toggleHistory}
+              toggleHistoryDisplay={this.props.toggleHistoryDisplay}
             />
           </FormGroup>
         </Form>

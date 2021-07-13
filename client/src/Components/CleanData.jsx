@@ -28,16 +28,18 @@ class CleanData extends Component {
   /**
    * Data has been edited, so package it, update the history and move
    * onto the view step
-   * @param {*} e
+   * @param {*} e event
    */
   buildDataSet = (e) => {
     const dataToClean = this.props.values.dataToClean;
     const columnDefinitions = this.props.values.columnDefinitions;
 
-    var retVal = ConversionUtilities.buildDataToView(
+    var conversionResults = ConversionUtilities.buildDataToView(
       dataToClean,
       columnDefinitions
     );
+
+    console.log(conversionResults);
 
     var historyItems = [];
 
@@ -72,13 +74,17 @@ class CleanData extends Component {
       }
     });
 
-    this.props.addHistory(null, null, historyItems);
 
-    this.props.updateStateValue("colHeadersView", retVal.colHeadersView);
+    //do the histories, combine the two separate arrays into one
+    var histories = [...historyItems, ...conversionResults.conversionHistory]
+    this.props.addHistory(null, null, histories);
+    
+
+    this.props.updateStateValue("colHeadersView", conversionResults.colHeadersView);
 
     this.props.updateStateValue(
       "dataToView",
-      retVal.dataToView,
+      conversionResults.dataToView,
       this.nextStep(e)
     );
   };
@@ -212,7 +218,7 @@ class CleanData extends Component {
               NextStep={this.buildDataSet}
               PrevStep={this.prevStep}
               Title={"Clean Data Source"}
-              toggleHistory={this.props.toggleHistory}
+              toggleHistoryDisplay={this.props.toggleHistoryDisplay}
             />
           </FormGroup>
         </Form>

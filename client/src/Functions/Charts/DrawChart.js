@@ -39,7 +39,7 @@ const DrawChart = function (
 
   //TODO Tidy up this conversion logic
   if (chartType === "pie") {
-    data = ConversionUtilities.makePieData(data);
+    data = ConversionUtilities.groupTextData(data);
   } else if (chartType === "box") {
     data = ConversionUtilities.convertToNumberArray(data);
   } else if (dataType === "text") {

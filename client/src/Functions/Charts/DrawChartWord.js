@@ -6,18 +6,20 @@ const DrawChartWord = function (data, selector, dimensions) {
   //need a bigger left border for the labels
   dimensions.margins.left = 100;
   //var svg = ChartBuildBody(selector, dimensions);
+  console.log(
+    data.map((d) => {
+      return { text: d.name, size: d.value };
+    })
+  );
 
   var layout = cloud()
     .size([dimensions.containerWidth, dimensions.containerHeight])
     .words(
       data.map((d) => {
-        return { text: d.name, size: d.value * 10 };
+        return { text: d.name, size: d.value };
       })
     )
     .padding(5)
-    // .rotate(function () {
-    //   return ~~(Math.random() * 2) * 90;
-    // })
     .font("Impact")
     .fontSize(function (d) {
       return d.size;

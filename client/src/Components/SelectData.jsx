@@ -1,4 +1,4 @@
-// TODO Clean up load HTML tables dialogue
+// DONE Clean up load HTML tables dialogue
 // DONE Add drag and drop functionality for CSV files
 // TODO clean up data loading and standardise between the two functions
 // TODO Add modal loading screen for data load
@@ -65,7 +65,7 @@ class SelectData extends Component {
       const body = await response.text();
 
       this.props.addHistory(
-        "tables loaded ",
+        "Found tables ",
         JSON.parse(body).Data.length.toString()
       );
 
@@ -89,6 +89,8 @@ class SelectData extends Component {
     Array.from(e.dataTransfer.files).forEach(async (file) => {
       const text = await file.text();
 
+      const addHistory = this.props.addHistory;
+
       parse(text, {
         header: true,
         dynamicTyping: true,
@@ -97,7 +99,8 @@ class SelectData extends Component {
           setLoadedInfoData(file.name, "CSV");
           if (results.errors.length === 0) {
             setLoadedData([results.data]);
-            this.props.addHistory("Tables loaded", "1 ");
+
+            addHistory("Tables loaded", "1 ");
           } else {
             const errors = results.errors
               .map((err) => {
@@ -223,7 +226,7 @@ class SelectData extends Component {
           <FormGroup>
             <NavBar
               Title={"Select Data Source"}
-              toggleHistory={this.props.toggleHistory}
+              toggleHistoryDisplay={this.props.toggleHistoryDisplay}
             />
           </FormGroup>
         </Form>
@@ -279,9 +282,6 @@ class SelectData extends Component {
                 : "border-gray-600"
             }`}
           />
-        </InputGroup>
-        <InputGroup className="mb-3">
-          <Button>Blank worksheet</Button>
         </InputGroup>
         {/* */}
 

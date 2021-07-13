@@ -7,7 +7,9 @@ const ConversionUtilities = {
    * @returns if null not a number, else number
    */
   convertToNumber: function (pNum) {
-    var num = Number(pNum);
+    console.log(pNum);
+
+    var num = Number(pNum.toString().replace(/,|%/g, ""));
     if (typeof num === "number" && isFinite(num)) return num;
     return null;
   },
@@ -73,16 +75,27 @@ const ConversionUtilities = {
       return row.slice();
     });
 
-    //convert data a cell at a time in the data type specified in the column definition
-    data.forEach((row, rIdx) => {
-      row.forEach((col, cIdx) => {
-        if (
-          pColumnDefinitions[cIdx].required &&
-          pColumnDefinitions[cIdx].dataType === "numeric"
-        ) {
-          row[cIdx] = ConversionUtilities.convertToNumber(col);
+    //convert data a column at a time
+    const histConversionCols = [];
+    pColumnDefinitions.forEach((col, colIdx) => {
+      if (
+        pColumnDefinitions[colIdx].required &&
+        pColumnDefinitions[colIdx].dataType === "numeric"
+      ) {
+        var nonNumeric = 0;
+
+        data.forEach((row, rIdx) => {
+          row[colIdx] = ConversionUtilities.convertToNumber(row[colIdx]);
+          if (row[colIdx] === null) nonNumeric++;
+        });
+
+        if (nonNumeric > 0) {
+          histConversionCols.push({
+            action: "Column " + (colIdx + 1) + " Data conversion to numeric",
+            description: "Unable to convert " + nonNumeric + " value(s)",
+          });
         }
-      });
+      }
     });
 
     //delete the columns that are not checked
@@ -95,6 +108,7 @@ const ConversionUtilities = {
     var retVal = {
       colHeadersView: colHeadersView,
       dataToView: data,
+      conversionHistory: histConversionCols,
     };
 
     return retVal;

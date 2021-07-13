@@ -56,7 +56,7 @@ class History extends Component {
         </Toast>
         {this.getHistory().map((historyItem, index) => {
           return (
-            <p>
+            <p key={"history" + index}>
               <small>{historyItem}</small>
             </p>
           );

@@ -9,20 +9,33 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import HistoryUtilties from "../Functions/HistoryUtilties";
 
+/*
+
+  Main.jsx
+
+  This page is the parent of
+    1. LoadData.jsx, 
+    2. SelectData.jsx
+    3. ViewData.jsx
+
+  It decides which of the above pages to display
+
+
+*/
+
 // TODO Uncouple the data manipulation logic from the pages
 class Main extends Component {
   state = {
-    //current page
-    step: 1,
+    step: 1, //current page
 
     //selected data type
     DataType: "csv",
 
     //can be data or a URL
-    InputData:
-      "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
+    InputData: "https://en.wikipedia.org/wiki/Internet_traffic",
 
     TestLinks: [
+      "https://en.wikipedia.org/wiki/Internet_traffic",
       "https://raw.githubusercontent.com/AndyStobirski/tabular-vis.js/main/v1/demo.html",
       "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes",
       "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)",
@@ -43,15 +56,9 @@ class Main extends Component {
     dataToView: null,
     colHeadersView: null,
 
-    visualise: null,
-
-    isPaneOpenLeft: false,
-
     history: [],
 
-    collapsed: true,
-
-    titles: ["Select Data Source", "Clean Data", "View Data"],
+    historyHidden: true,
   };
 
   /**
@@ -95,9 +102,10 @@ class Main extends Component {
    * Something to do with the asynchronous nature of this.setState,
    * I think.
    *
-   * @param {*} action
-   * @param {*} description
-   * @param {*} itemArray
+   * @param {*} action The history action being carried out
+   * @param {*} description Associated data
+   * @param {*} itemArray Optional item, if defined it is an array of items to
+   *                      add in one go
    */
   addHistory = (action, description, itemArray) => {
     const history = this.state.history;
@@ -108,17 +116,16 @@ class Main extends Component {
     } else this.setState({ history: [...history, ...itemArray] });
   };
 
+  /**
+   * Reset the history
+   */
   clearHistory = () => {
     this.setState({ history: [] });
   };
 
-  toggleHistory = () => {
-    const collapsed = this.state.collapsed;
-    this.setState({ collapsed: !collapsed });
-  };
-
-  navBarTitle = () => {
-    return this.state.titles[this.state.step - 1];
+  toggleHistoryDisplay = () => {
+    const historyHidden = this.state.historyHidden;
+    this.setState({ historyHidden: !historyHidden });
   };
 
   navbarButtons = () => {
@@ -160,7 +167,6 @@ class Main extends Component {
       dataToClean,
       visualise,
       TestLinks,
-      History,
     } = this.state;
 
     const values = {
@@ -175,8 +181,9 @@ class Main extends Component {
       dataToClean,
       visualise,
       TestLinks,
-      History,
     };
+
+    console.log();
 
     // eslint-disable-next-line default-case
     switch (step) {
@@ -188,7 +195,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
-            toggleHistory={this.toggleHistory}
+            toggleHistoryDisplay={this.toggleHistoryDisplay}
           />
         );
 
@@ -201,7 +208,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
-            toggleHistory={this.toggleHistory}
+            toggleHistoryDisplay={this.toggleHistoryDisplay}
           />
         );
 
@@ -213,7 +220,7 @@ class Main extends Component {
             values={values}
             updateStateValue={this.UpdateStateValue}
             addHistory={this.addHistory}
-            toggleHistory={this.toggleHistory}
+            toggleHistoryDisplay={this.toggleHistoryDisplay}
           />
         );
     }
@@ -228,19 +235,16 @@ class Main extends Component {
     return (
       <Container>
         <Row>
-          {/* <Collapse in={this.state.collapsed}> */}
-          {!this.state.collapsed && (
+          {!this.state.historyHidden && (
             <Col sm={4}>
               <History
-                collapsed={this.state.collapsed}
+                collapsed={this.state.historyHidden}
                 history={this.state.history}
                 clearHistory={this.clearHistory}
               />
             </Col>
           )}
-          {/* </Collapse> */}
-
-          <Col sm={this.state.collapsed ? 12 : 8}>{this.getPage()}</Col>
+          <Col sm={this.state.historyHidden ? 12 : 8}>{this.getPage()}</Col>
         </Row>
       </Container>
     );
