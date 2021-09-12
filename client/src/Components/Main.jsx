@@ -3,11 +3,12 @@ import SelectData from "./SelectData";
 import ViewData from "./ViewData";
 import CleanData from "./CleanData";
 import History from "./History";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import HistoryUtilties from "../Functions/HistoryUtilties";
+import Button from "react-bootstrap/Button";
+import Navbar from "react-bootstrap/Navbar";
 
 /*
 
@@ -18,8 +19,15 @@ import HistoryUtilties from "../Functions/HistoryUtilties";
     2. SelectData.jsx
     3. ViewData.jsx
 
-  It decides which of the above pages to display
+  It decides which of the above pages to display based on the user interactivity.
 
+  On application startup it displays LoadData.jsx - selecting a tabular data 
+  source loaded in this page will display the page SelectData.jsx
+
+  SelectData.jsx can navigate back to the page LoadData.jsx or forwards to
+  ViewData.jsx
+  
+  ViewData.jsx can navigate back to the page SelectData.jsx
 
 */
 
@@ -32,7 +40,7 @@ class Main extends Component {
     DataType: "csv",
 
     //can be data or a URL
-    InputData: "https://en.wikipedia.org/wiki/Internet_traffic",
+    InputData: "", //"https://en.wikipedia.org/wiki/Internet_traffic",
 
     TestLinks: [
       "https://en.wikipedia.org/wiki/Internet_traffic",
@@ -71,7 +79,9 @@ class Main extends Component {
     this.setState({ [property]: value }, func);
   };
 
-  //proceed to the next step
+  /**
+   * Increment the step counter
+   */
   nextStep = () => {
     const { step } = this.state;
     this.setState({
@@ -84,7 +94,9 @@ class Main extends Component {
     this.setState({ [input]: e.target.value });
   };
 
-  //proceed to the previos step
+  /**
+   * Decrement the step counter
+   */
   prevStep = () => {
     const { step } = this.state;
     this.setState({
@@ -123,33 +135,48 @@ class Main extends Component {
     this.setState({ history: [] });
   };
 
+  /**
+   * Toggle the display of the history panel
+   */
   toggleHistoryDisplay = () => {
     const historyHidden = this.state.historyHidden;
     this.setState({ historyHidden: !historyHidden });
   };
 
-  navbarButtons = () => {
+  // navbarButtons = () => {
+  //   // eslint-disable-next-line default-case
+  //   switch (this.state.step) {
+  //     case 2: //clean data
+  //       return (
+  //         <React.Fragment>
+  //           <Button variant="primary" onClick={this.prevStep}>
+  //             Previous
+  //           </Button>
+  //           <Button variant="primary" onClick={this.nextStep}>
+  //             Next
+  //           </Button>
+  //         </React.Fragment>
+  //       );
+  //     case 3: //view data
+  //       return (
+  //         <React.Fragment>
+  //           <Button variant="primary" onClick={this.prevStep}>
+  //             Previous
+  //           </Button>
+  //         </React.Fragment>
+  //       );
+  //   }
+  // };
+
+  getPageTitle = () => {
     // eslint-disable-next-line default-case
     switch (this.state.step) {
-      case 2: //clean data
-        return (
-          <React.Fragment>
-            <Button variant="primary" onClick={this.prevStep}>
-              Previous
-            </Button>
-            <Button variant="primary" onClick={this.nextStep}>
-              Next
-            </Button>
-          </React.Fragment>
-        );
-      case 3: //view data
-        return (
-          <React.Fragment>
-            <Button variant="primary" onClick={this.prevStep}>
-              Previous
-            </Button>
-          </React.Fragment>
-        );
+      case 1:
+        return "Select Data Source";
+      case 2:
+        return "Clean Data Source";
+      case 3:
+        return "View Data";
     }
   };
 
@@ -244,6 +271,10 @@ class Main extends Component {
               />
             </Col>
           )}
+          {/* <Navbar bg="primary" expand="sm" variant="dark">
+            <Navbar.Brand>{this.getPageTitle()}</Navbar.Brand>
+            <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
+          </Navbar> */}
           <Col sm={this.state.historyHidden ? 12 : 8}>{this.getPage()}</Col>
         </Row>
       </Container>

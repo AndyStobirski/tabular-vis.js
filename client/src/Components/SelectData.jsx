@@ -17,6 +17,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import ConversionUtilities from "../Functions/ConversionUtilities";
 import Alert from "react-bootstrap/Alert";
 import { parse } from "papaparse";
+import CloseButton from "react-bootstrap/CloseButton";
 
 /**
  * SelectData - first page of the application.
@@ -79,7 +80,6 @@ class SelectData extends Component {
    */
   uploadCSV = (e) => {
     e.preventDefault();
-    const addHistory = this.props.addHistory;
     const setLoadedData = this.setLoadedData;
     const setErrorData = this.setErrorData;
     const setLoadedInfoData = this.setLoadedInfoData;
@@ -225,7 +225,7 @@ class SelectData extends Component {
         <Form>
           <FormGroup>
             <NavBar
-              Title={"Select Data Source"}
+              Title={"Step 1: Select Data Source"}
               toggleHistoryDisplay={this.props.toggleHistoryDisplay}
             />
           </FormGroup>
@@ -234,7 +234,7 @@ class SelectData extends Component {
         {/* */}
         <Form onSubmit={this.loadURL}>
           <InputGroup className="mb-4">
-            <DropdownButton
+            {/* <DropdownButton
               as={InputGroup.Prepend}
               variant="outline-secondary"
               title="Handy Links"
@@ -248,12 +248,19 @@ class SelectData extends Component {
                   </Dropdown.Item>
                 );
               })}
-            </DropdownButton>
+            </DropdownButton> */}
             <FormControl
-              placeholder="URL to load"
+              placeholder="Data source"
               value={values.InputData}
               onChange={handleChange("InputData")}
+              input
+              type="search"
             />
+            {/* <InputGroup.Append>
+              <Button variant="outline-secondary" type="submit">
+                <CloseButton />
+              </Button>
+            </InputGroup.Append> */}
             <InputGroup.Append>
               <Button variant="outline-secondary" type="submit">
                 Load URL
