@@ -74,13 +74,14 @@ class CleanData extends Component {
       }
     });
 
-
     //do the histories, combine the two separate arrays into one
-    var histories = [...historyItems, ...conversionResults.conversionHistory]
+    var histories = [...historyItems, ...conversionResults.conversionHistory];
     this.props.addHistory(null, null, histories);
-    
 
-    this.props.updateStateValue("colHeadersView", conversionResults.colHeadersView);
+    this.props.updateStateValue(
+      "colHeadersView",
+      conversionResults.colHeadersView
+    );
 
     this.props.updateStateValue(
       "dataToView",
@@ -217,7 +218,7 @@ class CleanData extends Component {
             <NavBar
               NextStep={this.buildDataSet}
               PrevStep={this.prevStep}
-              Title={"Clean Data Source"}
+              Title={"Step 2: Clean Data Source"}
               toggleHistoryDisplay={this.props.toggleHistoryDisplay}
             />
           </FormGroup>
