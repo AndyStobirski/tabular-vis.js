@@ -557,12 +557,12 @@ class ViewData extends Component {
               <Button variant="secondary" onClick={this.downloadShow}>
                 Export to file
               </Button>
-              <Button variant="secondary" onClick={this.clearFilters}>
+              {/* <Button variant="secondary" onClick={this.clearFilters}>
                 Clear Filters
               </Button>
               <Button variant="secondary" onClick={this.clearSort}>
                 Clear Sort
-              </Button>
+              </Button> */}
             </ButtonGroup>
             <Alert variant="info">
               Rows displayed: {this.state.rowsDisplayed}

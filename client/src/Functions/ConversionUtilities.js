@@ -7,8 +7,6 @@ const ConversionUtilities = {
    * @returns if null not a number, else number
    */
   convertToNumber: function (pNum) {
-    console.log(pNum);
-
     var num = Number(pNum.toString().replace(/,|%/g, ""));
     if (typeof num === "number" && isFinite(num)) return num;
     return null;
@@ -55,7 +53,20 @@ const ConversionUtilities = {
    * Build a data set that will be viewed in a grid
    * @param {*} pDataToClean An array of the table data
    * @param {*} pColumnDefinitions A list of column defintions entered in step 2
-   * @returns Object containing data to viewed and column defintiions
+   * @returns Object containing data to viewed and column defintions, as follows:
+   *
+   * {
+   *    columnDefinitions: [
+   *        {colName: '', required: true/false, dataType: 'numeric'/'text', required:true/flase}
+   *        ...
+   *      ],
+   *    data:[
+   *      []
+   *    ],
+   *    conversionHistory: [] //a list of changes made during conversion
+   *
+   * }
+   *
    */
   buildDataToView: function (pDataToClean, pColumnDefinitions) {
     //get the column information
@@ -182,26 +193,6 @@ const ConversionUtilities = {
       })
       .filter((item) => item);
   },
-
-  // ,makePieData1: function (data) {
-  //   //convert to numbers
-  //   data.forEach(
-  //     (r) => (r.value = ConversionUtilities.convertToNumber(r.value))
-  //   );
-
-  //   //remove none numbers
-  //   data = data.filter((f) => f.value !== null);
-
-  //   //calculate percentages
-  //   const total = d3.sum(
-  //     data.map((c) => {
-  //       return c.value;
-  //     })
-  //   );
-  //   data.forEach((c) => (c.value = (c.value / total) * 100));
-
-  //   return data;
-  // },
 };
 
 export default ConversionUtilities;

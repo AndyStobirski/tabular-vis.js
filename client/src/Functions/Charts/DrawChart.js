@@ -13,7 +13,12 @@ import DrawBoxPlot from "./DrawBoxPlot";
 //DONE Implement point plit
 
 /**
- * Base funcion for drawing charts
+ * Base funcion for drawing charts. This is a wrapper for the functions
+ * DrawChartBar.js, DrawChartLine.js, DrawChartPie.js, DrawChartWord.js
+ * DrawPointPlotVertical.Js, DrawBoxPlot.js.
+ *
+ * It also uses the functions ChartBuildBody.js to configure the base
+ * viewer for the D3 object that displays the graph.
  *
  * @param {*} data An array of objects {name: "", value:""}
  * @param {*} width The width of the element the chart is to be drawn in

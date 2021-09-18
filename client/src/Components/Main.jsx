@@ -40,7 +40,8 @@ class Main extends Component {
     DataType: "csv",
 
     //can be data or a URL
-    InputData: "", //"https://en.wikipedia.org/wiki/Internet_traffic",
+    InputData:
+      "https://en.wikipedia.org/wiki/List_of_slow_rotators_(minor_planets)", //"https://en.wikipedia.org/wiki/Internet_traffic",
 
     TestLinks: [
       "https://en.wikipedia.org/wiki/Internet_traffic",

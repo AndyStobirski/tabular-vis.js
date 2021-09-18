@@ -27,7 +27,8 @@ class CleanData extends Component {
 
   /**
    * Data has been edited, so package it, update the history and move
-   * onto the view step
+   * onto the view step.
+   *
    * @param {*} e event
    */
   buildDataSet = (e) => {
@@ -39,8 +40,9 @@ class CleanData extends Component {
       columnDefinitions
     );
 
-    console.log(conversionResults);
-
+    //
+    // Check for changes and add any to the history list
+    //
     var historyItems = [];
 
     this.state.changedRows.forEach((change, index) => {
@@ -74,10 +76,13 @@ class CleanData extends Component {
       }
     });
 
-    //do the histories, combine the two separate arrays into one
+    //  The conversionResults object, generated above, contains a conversionHistory
+    //  combine that result with the historyItems array and add it into the history
+    //  list
     var histories = [...historyItems, ...conversionResults.conversionHistory];
     this.props.addHistory(null, null, histories);
 
+    //  Update the properies in Main.jsx
     this.props.updateStateValue(
       "colHeadersView",
       conversionResults.colHeadersView

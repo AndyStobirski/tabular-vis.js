@@ -12,12 +12,9 @@ import NavBar from "./NavBar";
 import ListGroup from "react-bootstrap/ListGroup";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import ConversionUtilities from "../Functions/ConversionUtilities";
 import Alert from "react-bootstrap/Alert";
 import { parse } from "papaparse";
-import CloseButton from "react-bootstrap/CloseButton";
 
 /**
  * SelectData - first page of the application.
@@ -41,6 +38,7 @@ class SelectData extends Component {
   };
 
   nextStep = (e) => {
+    console.log("nextStep", this.props.nextStep());
     this.props.nextStep();
   };
 
@@ -168,6 +166,9 @@ class SelectData extends Component {
 
     var convertedData = ConversionUtilities.processTableTable(data);
 
+    console.log("data", data);
+    console.log("convertedData", convertedData);
+
     this.props.updateStateValue("dataSelected", e);
     this.props.updateStateValue("dataToClean", convertedData.data);
     this.props.updateStateValue(
@@ -214,10 +215,6 @@ class SelectData extends Component {
     }
   };
 
-  predefinedDataSources = (e) => {
-    this.props.updateStateValue("InputData", this.props.values.TestLinks[e]);
-  };
-
   render() {
     const { values, handleChange } = this.props;
     return (
@@ -234,21 +231,6 @@ class SelectData extends Component {
         {/* */}
         <Form onSubmit={this.loadURL}>
           <InputGroup className="mb-4">
-            {/* <DropdownButton
-              as={InputGroup.Prepend}
-              variant="outline-secondary"
-              title="Handy Links"
-              id="input-group-dropdown-1"
-              onSelect={this.predefinedDataSources}
-            >
-              {this.props.values.TestLinks.map((item, idx) => {
-                return (
-                  <Dropdown.Item eventKey={idx} key={idx}>
-                    {item}
-                  </Dropdown.Item>
-                );
-              })}
-            </DropdownButton> */}
             <FormControl
               placeholder="Data source"
               value={values.InputData}
@@ -256,11 +238,6 @@ class SelectData extends Component {
               input
               type="search"
             />
-            {/* <InputGroup.Append>
-              <Button variant="outline-secondary" type="submit">
-                <CloseButton />
-              </Button>
-            </InputGroup.Append> */}
             <InputGroup.Append>
               <Button variant="outline-secondary" type="submit">
                 Load URL
