@@ -547,23 +547,24 @@ class ViewData extends Component {
               RefineStep={this.refineStep}
               Title={"Step 3: View Data Source"}
               toggleHistoryDisplay={this.props.toggleHistoryDisplay}
+              download={this.downloadShow}
             />
           </FormGroup>
         </Form>
 
         <Form>
           <FormGroup>
-            <ButtonGroup aria-label="Basic example">
+            {/* <ButtonGroup aria-label="Basic example">
               <Button variant="secondary" onClick={this.downloadShow}>
                 Export to file
               </Button>
-              {/* <Button variant="secondary" onClick={this.clearFilters}>
+              <Button variant="secondary" onClick={this.clearFilters}>
                 Clear Filters
               </Button>
               <Button variant="secondary" onClick={this.clearSort}>
                 Clear Sort
-              </Button> */}
-            </ButtonGroup>
+              </Button> 
+            </ButtonGroup>*/}
             <Alert variant="info">
               Rows displayed: {this.state.rowsDisplayed}
             </Alert>

@@ -6,6 +6,7 @@ import {
   BiRightArrowAlt,
   BiArrowBack,
   BiHistory,
+  BiDownArrowAlt,
 } from "react-icons/bi";
 
 class NavBavr extends Component {
@@ -15,6 +16,7 @@ class NavBavr extends Component {
     const nextStep = this.props.NextStep;
     const prevStep = this.props.PrevStep;
     const refineStep = this.props.RefineStep;
+    const download = this.props.download;
     const toggleHistoryDisplay = this.props.toggleHistoryDisplay;
 
     return (
@@ -25,6 +27,12 @@ class NavBavr extends Component {
           <BiHistory />
           Toggle History
         </Button>
+        {download != null && (
+          <Button variant="primary" onClick={download}>
+            <BiDownArrowAlt />
+            Export Grid
+          </Button>
+        )}
         {prevStep != null && (
           <Button variant="primary" onClick={prevStep}>
             <BiArrowBack />

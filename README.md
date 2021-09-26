@@ -4,13 +4,7 @@ A web based application used to generate visualisations from data selected on ta
 
 ## Software Requirements
 
-This application was developed on MS Windows 10 using [Visual Studio Code](https://code.visualstudio.com/), [node.js](https://nodejs.org/en/), npm (installed with node.js) and yarn (installed used npm).
-
-### Installing yarn
-
-After the installation of node.js install yarn from the command prompt with the following command:
-
-> npm install --global yarn
+This application was developed on MS Windows 10 using [Visual Studio Code](https://code.visualstudio.com/), [node.js](https://nodejs.org/en/) and npm (installed with node.js)..
 
 ## Install
 
@@ -24,11 +18,11 @@ Then change to the \client\ directory and run:
 
 ## Running
 
-From the command prompt run the following:
+To run tabular-vis.js run the following command from the terminal:
 
 > npm run dev
 
-To start the application, which runs on http://localhost:3000/
+This will start the application in your default browser using the URL http://localhost:3000/
 
 ## Previous version
 

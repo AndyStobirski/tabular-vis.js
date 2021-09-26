@@ -235,7 +235,6 @@ class SelectData extends Component {
               placeholder="Data source"
               value={values.InputData}
               onChange={handleChange("InputData")}
-              input
               type="search"
             />
             <InputGroup.Append>
