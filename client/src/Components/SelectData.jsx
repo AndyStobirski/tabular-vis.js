@@ -38,7 +38,6 @@ class SelectData extends Component {
   };
 
   nextStep = (e) => {
-    console.log("nextStep", this.props.nextStep());
     this.props.nextStep();
   };
 
@@ -165,9 +164,6 @@ class SelectData extends Component {
     const data = dataArray[e];
 
     var convertedData = ConversionUtilities.processTableTable(data);
-
-    console.log("data", data);
-    console.log("convertedData", convertedData);
 
     this.props.updateStateValue("dataSelected", e);
     this.props.updateStateValue("dataToClean", convertedData.data);

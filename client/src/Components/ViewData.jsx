@@ -21,8 +21,6 @@ import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.css";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import VisualiseModal from "./VisualiseModal";
 import ExportModal from "./ExportModal";
@@ -516,8 +514,6 @@ class ViewData extends Component {
   //#endregion
 
   render() {
-    console.log(this.props.toggleHistoryDisplay);
-
     return (
       <React.Fragment>
         {this.state.showVisualiser && (
@@ -554,17 +550,6 @@ class ViewData extends Component {
 
         <Form>
           <FormGroup>
-            {/* <ButtonGroup aria-label="Basic example">
-              <Button variant="secondary" onClick={this.downloadShow}>
-                Export to file
-              </Button>
-              <Button variant="secondary" onClick={this.clearFilters}>
-                Clear Filters
-              </Button>
-              <Button variant="secondary" onClick={this.clearSort}>
-                Clear Sort
-              </Button> 
-            </ButtonGroup>*/}
             <Alert variant="info">
               Rows displayed: {this.state.rowsDisplayed}
             </Alert>

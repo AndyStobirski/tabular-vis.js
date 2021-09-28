@@ -5,8 +5,6 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import * as d3 from "d3";
 import DrawChart from "../Functions/Charts/DrawChart";
 
-// TODO investigate data visualisations, https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
-
 /**
  * VisualiseModal
  *    this.props:
@@ -32,7 +30,6 @@ class VisualiseModal extends Component {
     //    (such as within `render`). Render methods should be a pure function of
     //    props and state.
     //this.props.addHistory("Loaded visualiser", this.props.description);
-    //console.log("VisualiseModal", this.props);
   }
 
   /**

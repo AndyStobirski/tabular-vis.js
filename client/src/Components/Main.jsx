@@ -7,8 +7,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import HistoryUtilties from "../Functions/HistoryUtilties";
-import Button from "react-bootstrap/Button";
-import Navbar from "react-bootstrap/Navbar";
 
 /*
 
@@ -210,8 +208,6 @@ class Main extends Component {
       visualise,
       TestLinks,
     };
-
-    console.log();
 
     // eslint-disable-next-line default-case
     switch (step) {

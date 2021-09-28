@@ -5,12 +5,6 @@ import * as d3 from "d3";
 const DrawChartWord = function (data, selector, dimensions) {
   //need a bigger left border for the labels
   dimensions.margins.left = 100;
-  //var svg = ChartBuildBody(selector, dimensions);
-  console.log(
-    data.map((d) => {
-      return { text: d.name, size: d.value };
-    })
-  );
 
   var layout = cloud()
     .size([dimensions.containerWidth, dimensions.containerHeight])

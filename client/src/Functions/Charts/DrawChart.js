@@ -4,7 +4,7 @@ import DrawChartWord from "./DrawChartWord";
 import DrawChartPie from "./DrawChartPie";
 import DrawPointPlotVertical from "./DrawPointPlotVertical";
 import * as d3 from "d3";
-import ChartDimensions from "../ChartDimensions";
+import ChartDimensions from "./ChartDimensions";
 import ConversionUtilities from "../ConversionUtilities";
 import DrawBoxPlot from "./DrawBoxPlot";
 

@@ -81,14 +81,12 @@ const DrawPointPlotVertical = function (data, selector, dimensions) {
     .enter()
     .append("text")
     .attr("x", function (d) {
-      console.log(x(d.name), y(d.value));
       return x(d.name) + x.bandwidth() / 2;
     })
     .attr("y", function (d) {
       return y(d.value) - 5;
     })
     .text(function (d) {
-      console.log(d.value);
       return Math.round(d.value * 100) / 100;
     })
     .attr("font-family", "sans-serif")
