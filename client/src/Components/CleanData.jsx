@@ -173,7 +173,6 @@ class CleanData extends Component {
           <tr>
             <th>Column Name</th>
             <th sm={1}>Display</th>
-            {/* <Col sm={1}>Allow Blank</Col> */}
             <th>Data Type</th>
           </tr>
         </thead>
@@ -204,7 +203,6 @@ class CleanData extends Component {
                 >
                   <option value="text">text</option>
                   <option value="numeric">numeric</option>
-                  <option value="date">date</option>
                 </FormControl>
               </td>
             </tr>

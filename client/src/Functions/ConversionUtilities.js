@@ -69,30 +69,15 @@ const ConversionUtilities = {
    *
    */
   buildDataToView: function (pDataToClean, pColumnDefinitions) {
-    //get the column information
-    let colsToRemove = []; // indexes of columns marked as not required by the user
-    let colHeadersView = []; // names of columns required by the user
-    pColumnDefinitions.forEach((el, ind) => {
-      if (!el.required) {
-        colsToRemove.push(ind);
-      } else {
-        colHeadersView.push(el.colName);
-      }
-    });
-    colsToRemove.sort().reverse();
-
     //make a value copy of the array or arrays - https://stackoverflow.com/a/13756775/500181
     var data = pDataToClean.map(function (row) {
       return row.slice();
     });
 
-    //convert data a column at a time
+    //Make numeric conversions and record any values that can't be converted
     const histConversionCols = [];
-    pColumnDefinitions.forEach((col, colIdx) => {
-      if (
-        pColumnDefinitions[colIdx].required &&
-        pColumnDefinitions[colIdx].dataType === "numeric"
-      ) {
+    pColumnDefinitions.forEach((el, colIdx) => {
+      if (el.required && el.dataType === "numeric") {
         var nonNumeric = 0;
 
         data.forEach((row, rIdx) => {
@@ -109,11 +94,20 @@ const ConversionUtilities = {
       }
     });
 
-    //delete the columns that are not checked
+    //delete the columns that are not required
     data.forEach((row, ind) => {
-      colsToRemove.forEach((d) => {
-        row.splice(d, 1);
+      pColumnDefinitions.forEach((el, ind) => {
+        if (!el.required) {
+          row.splice(ind, 1);
+        }
       });
+    });
+
+    let colHeadersView = []; // names of columns required by the user
+    pColumnDefinitions.forEach((el, ind) => {
+      if (el.required) {
+        colHeadersView.push(el.colName);
+      }
     });
 
     var retVal = {

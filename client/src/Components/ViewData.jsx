@@ -231,7 +231,11 @@ class ViewData extends Component {
     };
 
     var dataType = "text";
-    var columnDefinitions = this.props.values.columnDefinitions;
+
+    //only want the column values that are required
+    var columnDefinitions = this.props.values.columnDefinitions.map(
+      (cd) => cd.required
+    );
     if (ret.structure === "Column") {
       if (columnDefinitions[ret.value].dataType === "numeric")
         dataType = columnDefinitions[ret.value].dataType;
@@ -521,10 +525,10 @@ class ViewData extends Component {
             show={this.state.showVisualiser}
             close={this.visualiserClose}
             description={this.getSelectedCells().description()}
-            columnDefs={this.props.values.columnDefinitions}
+            columnDefs={this.props.values.columnDefinitions} //.map((cd) => cd.required)}
             data={VisualisationData.MakeData(
               this.getSelectedCells(),
-              this.props.values.columnDefinitions,
+              this.props.values.columnDefinitions, //.map((cd) => cd.required),
               this.visibleGridData()
             )}
             selectedCell={this.state.selectedCell}

@@ -43,6 +43,7 @@ const DrawChart = function (
   d3.select(selector).selectAll("*").remove();
 
   //TODO Tidy up this conversion logic
+
   if (chartType === "pie") {
     data = ConversionUtilities.groupTextData(data);
   } else if (chartType === "box") {
